@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация - Logotip news</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="auth-page">
+
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <a href="/pages/index.php">Logotip news</a>
+            </div>
+
+            <h1 class="auth-title" id="loginSlt">Добро пожаловать</h1>
+            <p class="auth-subtitle" id="authSubtitle">Войдите, чтобы предлагать новости</p>
+
+            <form id="loginForm" class="auth-form">
+                <div class="input-group">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="loginPassword" placeholder="Введите пароль" required>
+                </div>
+                <div class="auth-options">
+                    <a href="/auth/reset_pass.html" class="forgot-link" id="motDePasseOubl">Забыли пароль?</a>
+                </div>
+                <button type="submit" class="auth-btn-black" id="connectBtnLogin">Войти</button>
+
+                <div class="auth-divider"><span id="ouLogin">или</span></div>
+
+                <button type="button" id="showRegisterForm" class="auth-btn-outline">Создать аккаунт</button>
+            </form>
+
+            <form id="registerForm" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <input type="text" id="name" placeholder="Ваше полное имя" required>
+                </div>
+                <div class="input-group">
+                    <input type="email" id="registerEmail" placeholder="Email" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="registerPassword" placeholder="Придумайте пароль" required>
+                </div>
+                <div class="input-group">
+                    <textarea id="bio" placeholder="Расскажите о себе" rows="3" class="auth-textarea"></textarea>
+                </div>
+                <button type="submit" class="auth-btn-black" id="enregistreLogin">Зарегистрироваться</button>
+
+                <div class="auth-divider"><span id="ouLogin2">уже есть аккаунт?</span></div>
+
+                <button type="button" id="showLoginForm" class="auth-btn-outline">Вернуться ко входу</button>
+            </form>
+
+            <form id="verification" class="auth-form" style="display: none;">
+                <div class="input-group">
+                    <input type="text" id="verificationCode" placeholder="Введите код" required>
+                </div>
+                <button type="button" id="verifyBtn" class="auth-btn-black">Подтвердить код</button>
+            </form>
+
+            <p id="message" class="auth-message"></p>
+        </div>
+    </div>
+    <script src="/assets/js/lang.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/login.js"></script>
+</body>
+
+</html>

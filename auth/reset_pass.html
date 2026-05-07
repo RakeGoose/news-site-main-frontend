@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Восстановление пароля - Logotip news</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="auth-page" style="opacity: 0; transition: opacity 0.2s;">
+    <div class="auth-wrapper">
+        <div class="auth-container">
+            <div class="auth-logo">
+                <a href="/pages/index.php">Logotip news</a>
+            </div>
+
+            <h1 class="auth-title" id="resetPass">Забыли пароль?</h1>
+            <p class="auth-subtitle" id="conseilPass">
+                Введите ваш e-mail, и мы отправим вам инструкции по восстановлению доступа к аккаунту.
+            </p>
+
+            <form id="resetPassword" class="auth-form">
+                <div class="input-group">
+                    <input type="email" id="resetEmailInput" placeholder="Ваш Email" required>
+                </div>
+
+                <button type="button" id="resetEmailBtn" class="auth-btn-black">Отправить инструкции</button>
+            </form>
+
+            <p id="message" class="auth-message" style="margin-top: 20px;"></p>
+        </div>
+    </div>
+
+    <script src="/assets/js/lang.js"></script>
+    <script src="/assets/js/main.js"></script>
+    <script src="/assets/js/reset.js"></script>
+</body>
+
+</html> 
