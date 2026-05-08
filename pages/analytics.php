@@ -1,24 +1,28 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
+require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
-$category_name = 'Аналитика';
+$lang = $_SESSION['lang'] ?? 'ru';
+$category_slug = 'analytics';
 
-$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content 
-        FROM news n
-        JOIN categories c ON n.category_id = c.id
-        JOIN news_translations t ON n.id = t.news_id
-        WHERE c.name = ? 
-        AND n.status = 'approved' 
-        AND t.language = ?
-        ORDER BY n.created_at DESC";
+$result = array_values(array_filter($mockNews, function ($news) use ($lang, $category_slug) {
+    return ($news['status'] ?? '') === 'approved'
+            && ($news['language'] ?? 'ru') === $lang
+            && ($news['category_slug'] ?? '') === $category_slug;
+}));
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $category_name, $lang);
-$stmt->execute();
-$result = $stmt->get_result();
+usort($result, function ($a, $b) {
+    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+});
+
+$mockCommentsCount = [
+        1 => 4,
+        2 => 2,
+        3 => 7,
+];
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -56,7 +60,7 @@ $result = $stmt->get_result();
         </div>
 
         <div class="logo-container">
-            <a href="index.php" style="text-decoration: none; color: inherit;">
+            <a href="/pages/index.php" style="text-decoration: none; color: inherit;">
                 <h1 class="logo">Logotip news</h1>
             </a>
         </div>
@@ -79,16 +83,14 @@ $result = $stmt->get_result();
     <main class="section">
         <div class="container">
             <ul class="news-grid-list">
-                <?php if ($result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): 
-                        // Получаем количество комментариев для каждой новости
+                <?php if (!empty($result)): ?>
+                    <?php foreach ($result as $row):
                         $n_id = $row['id'];
-                        $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
-                        $comm_count = $c_res->fetch_assoc()['count'];
+                        $comm_count = $mockCommentsCount[$n_id] ?? 0;
                     ?>
                         <li class="news-item-card">
                             <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
-                                <img src="<?= htmlspecialchars($row['image'] ?: 'img/default.jpg') ?>?tr=w-800,q-auto,f-auto" alt="img" class="news-item__img" loading="lazy">
+                                <img src="/uploads/news/<?= htmlspecialchars($row['image'] ?: 'news_69bfb8a8c3a62.jpeg') ?>" alt="img" class="news-item__img" loading="lazy">
 
                                 <h3 class="news-item__title">
                                     <?= htmlspecialchars($row['title']) ?>
@@ -113,7 +115,7 @@ $result = $stmt->get_result();
                                 </span>
                             </div>
                         </li>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <div class="no-news" id="no_news_found">Пока нет аналитических новостей на выбранном языке.</div>
                 <?php endif; ?>

@@ -1,24 +1,34 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
+require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
+$lang = $_SESSION['lang'] ?? 'ru';
 
-$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content, c.name as category_name
-        FROM news n
-        JOIN categories c ON n.category_id = c.id
-        JOIN news_translations t ON n.id = t.news_id
-        WHERE n.status = 'approved'     
-        AND t.language = ? 
-        ORDER BY n.created_at DESC";
+$news_result = array_values(array_filter($mockNews, function ($news) use ($lang) {
+    return ($news['status'] ?? '') === 'approved'
+            && ($news['language'] ?? 'ru') === $lang;
+}));
 
+usort($news_result, function ($a, $b) {
+    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+});
 
+$mockAuthors = [
+        ['name' => 'Алихан Сейсенов'],
+        ['name' => 'Мария Ким'],
+        ['name' => 'Рустем Ахметов'],
+        ['name' => 'Дана Омарова'],
+        ['name' => 'Ерасыл Нурлан'],
+];
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $lang);
-$stmt->execute();
-$news_result = $stmt->get_result();
+$mockCommentsCount = [
+        1 => 4,
+        2 => 2,
+        3 => 7,
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -79,22 +89,16 @@ $news_result = $stmt->get_result();
             <div class="sidebar-box">
                 <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
                 <ol class="author-list" id="best-authors-list">
-                    <?php
-                    $author_query = "SELECT name FROM users WHERE role != 'admin' ORDER BY rating DESC LIMIT 7";
-                    $authors_result = $conn->query($author_query);
-
-                    if ($authors_result && $authors_result->num_rows > 0):
-                        while ($author = $authors_result->fetch_assoc()):
+                    <?php if (!empty($mockAuthors)): ?>
+                        <?php foreach ($mockAuthors as $author):
                             $nameParts = explode(' ', trim($author['name']));
                             $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
-                    ?>
+                            ?>
                             <li class="author-item">
                                 <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
                             </li>
-                        <?php
-                        endwhile;
-                    else:
-                        ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <p class="no-data" id="no-data">Список пуст</p>
                     <?php endif; ?>
                 </ol>
@@ -102,19 +106,18 @@ $news_result = $stmt->get_result();
         </aside>
 
         <main class="content-center">
-            <?php if ($news_result->num_rows > 0): ?>
-                <?php while ($row = $news_result->fetch_assoc()):
+            <?php if (!empty($news_result)): ?>
+                <?php foreach ($news_result as $row):
                     $n_id = $row['id'];
                     // Получаем только кол-во комментариев
-                    $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
-                    $comm_count = $c_res->fetch_assoc()['count'];
+                    $comm_count = $mockCommentsCount[$n_id] ?? 0;
                 ?>
                     <article class="news-card">
                         <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link-container">
                             <?php if ($row['image']): ?>
-                                <img src="<?= htmlspecialchars($row['image']) ?>?tr=w-800,q-auto,f-auto"
-                                    class="news-main-img"
-                                    loading="lazy">
+                                <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
+                                     class="news-main-img"
+                                     loading="lazy">
                             <?php endif; ?>
 
                             <div class="news-info">
@@ -146,7 +149,7 @@ $news_result = $stmt->get_result();
                             </div>
                         </div>
                     </article>
-                <?php endwhile; ?>
+                <?php endforeach; ?>
             <?php else: ?>
                 <div class="no-news">Новостей пока нет.</div>
             <?php endif; ?>
@@ -156,23 +159,16 @@ $news_result = $stmt->get_result();
             <div class="sidebar-box side-news">
                 <h3 class="sidebar-title" id="all-news">Все новости</h3>
                 <div class="side-news-list">
-                    <?php
-                    if ($news_result && $news_result->num_rows > 0):
-                        $news_result->data_seek(0);
-                        $count = 0;
-                        while ($side_row = $news_result->fetch_assoc()):
-                            if ($count >= 5) break;
-                    ?>
+                    <?php if (!empty($news_result)): ?>
+                        <?php foreach (array_slice($news_result, 0, 5) as $side_row): ?>
                             <div class="side-news-item">
                                 <a href="/pages/article.php?id=<?= $side_row['id'] ?>" class="side-news-link">
                                     <span class="side-news-date"><?= date('H:i', strtotime($side_row['created_at'])) ?></span>
                                     <p class="side-news-title"><?= htmlspecialchars($side_row['title']) ?></p>
                                 </a>
                             </div>
-                        <?php
-                            $count++;
-                        endwhile;
-                    else: ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
                         <p class="no-data">Новостей нет</p>
                     <?php endif; ?>
                 </div>

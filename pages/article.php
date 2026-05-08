@@ -1,34 +1,59 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/mock_data.php';
 
 $news_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
+$lang = $_SESSION['lang'] ?? 'ru';
 
 if ($news_id <= 0) {
     header("Location: /pages/index.php");
     exit;
 }
 
-// Увеличиваем счетчик просмотров
-$conn->query("UPDATE news SET views = views + 1 WHERE id = $news_id");
+$article = null;
 
-// Получаем данные статьи, переводы и автора
-$sql = "SELECT n.*, t.title, t.content, u.name as author_name, c.name as cat_name
-        FROM news n
-        JOIN news_translations t ON n.id = t.news_id
-        JOIN users u ON n.author_id = u.id
-        JOIN categories c ON n.category_id = c.id
-        WHERE n.id = ? AND t.language = ? AND n.status = 'approved'";
-
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("is", $news_id, $lang);
-$stmt->execute();
-$article = $stmt->get_result()->fetch_assoc();
+foreach ($mockNews as $news) {
+    if (
+            (int)$news['id'] === $news_id
+            && ($news['language'] ?? 'ru') === $lang
+            && ($news['status'] ?? '') === 'approved'
+    ) {
+        $article = $news;
+        break;
+    }
+}
 
 if (!$article) {
     die("Статья не найдена или еще не одобрена.");
 }
+
+$article['views'] = ($article['views'] ?? 0) + 1;
+
+$mockComments = [
+        1 => [
+                [
+                        'name' => 'Мария Ким',
+                        'content' => 'Хороший материал, удобно читать.',
+                        'created_at' => '2026-05-09 13:20:00',
+                ],
+                [
+                        'name' => 'Рустем Ахметов',
+                        'content' => 'Нужно добавить больше деталей по теме.',
+                        'created_at' => '2026-05-09 14:05:00',
+                ],
+        ],
+        2 => [
+                [
+                        'name' => 'Дана Омарова',
+                        'content' => 'Интересная спортивная новость.',
+                        'created_at' => '2026-05-08 19:00:00',
+                ],
+        ],
+];
+
+$comments = $mockComments[$news_id] ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -181,7 +206,7 @@ if (!$article) {
         </header>
 
         <?php if ($article['image']): ?>
-            <img src="<?= htmlspecialchars($article['image']) ?>" alt="Main Photo" class="article-main-img">
+            <img src="/uploads/news/<?= htmlspecialchars($article['image']) ?>" alt="Main Photo" class="article-main-img">
         <?php endif; ?>
 
         <div class="article-content">
@@ -202,12 +227,12 @@ if (!$article) {
                     $second_part = mb_substr($content, $breakpoint + 1);
 
                     echo nl2br(htmlspecialchars($first_part));
-                    echo '<img src="' . htmlspecialchars($inner_image) . '" alt="Inner Photo" class="article-main-img article-inner-img">';
+                    echo '<img src="/uploads/news/' . htmlspecialchars($inner_image) . '" alt="Inner Photo" class="article-main-img article-inner-img">';
                     echo nl2br(htmlspecialchars($second_part));
                 } else {
                     // Если точку не нашли, просто выводим текст и фото под ним
                     echo nl2br(htmlspecialchars($content));
-                    echo '<img src="' . htmlspecialchars($inner_image) . '" alt="Inner Photo" class="article-main-img article-inner-img">';
+                    echo '<img src="/uploads/news/' . htmlspecialchars($inner_image) . '" alt="Inner Photo" class="article-main-img article-inner-img">';
                 }
             } else {
                 echo nl2br(htmlspecialchars($content));
@@ -222,7 +247,7 @@ if (!$article) {
 
         <div class="comment-form-container">
             <?php if (isset($_SESSION['user'])): ?>
-                <form action="/actions/news/comment.php" method="POST">
+                <form action="#" method="POST" onsubmit="alert('Комментарии временно отключены: сайт работает без базы данных.'); return false;">
                     <input type="hidden" name="news_id" value="<?= $news_id ?>">
                     <textarea name="comment_text" class="comment-textarea" placeholder="Ваш комментарий..." required></textarea>
                     <button type="submit" class="comment-submit">Отправить</button>
@@ -235,21 +260,15 @@ if (!$article) {
         </div>
 
         <div class="comments-list">
-            <?php
-            $comm_stmt = $conn->prepare("SELECT c.content, c.created_at, u.name FROM comments c JOIN users u ON c.user_id = u.id WHERE c.news_id = ? ORDER BY c.created_at DESC");
-            $comm_stmt->bind_param("i", $news_id);
-            $comm_stmt->execute();
-            $comments = $comm_stmt->get_result();
-
-            if ($comments->num_rows > 0):
-                while ($c = $comments->fetch_assoc()): ?>
+            <?php if (!empty($comments)): ?>
+                <?php foreach ($comments as $c): ?>
                     <div class="comment-item">
                         <span class="comment-date"><?= date('d.m.Y H:i', strtotime($c['created_at'])) ?></span>
                         <div class="comment-author"><?= htmlspecialchars($c['name']) ?></div>
                         <p style="color: #4a5568; margin-top: 5px;"><?= nl2br(htmlspecialchars($c['content'])) ?></p>
                     </div>
-                <?php endwhile;
-            else: ?>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <p style="color: #a0aec0; text-align: center; margin-top: 20px;">Пока нет комментариев.</p>
             <?php endif; ?>
         </div>
