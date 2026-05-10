@@ -62,135 +62,14 @@ $comments = $mockComments[$news_id] ?? [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= htmlspecialchars($article['title']) ?> | Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/pages/article.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        .article-container {
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 0 20px;
-            word-wrap: break-word;
-        }
-
-        .article-header {
-            margin-bottom: 30px;
-        }
-
-        .article-category {
-            color: #009688;
-            text-transform: uppercase;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-
-        .article-title {
-            font-size: 2.5rem;
-            line-height: 1.2;
-            margin: 10px 0;
-            color: #1a1a1a;
-        }
-
-        .article-meta {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            display: flex;
-            gap: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
-
-        .article-main-img {
-            width: 100%;
-            border-radius: 15px;
-            margin: 20px 0;
-            object-fit: cover;
-            max-height: 500px;
-            display: block;
-        }
-
-        /* Стиль для фото внутри текста */
-        .article-inner-img {
-            margin: 35px 0;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .article-content {
-            font-size: 1.2rem;
-            line-height: 1.8;
-            color: #2c3e50;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            color: #009688;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        /* Комментарии */
-        #comments {
-            margin-top: 50px;
-        }
-
-        .comments-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .comment-textarea {
-            width: 100%;
-            min-height: 110px;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 10px;
-            font-family: inherit;
-        }
-
-        .comment-submit {
-            background: #009688;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .comment-item {
-            border-bottom: 1px solid #f0f0f0;
-            padding: 20px 0;
-        }
-
-        .comment-author {
-            font-weight: 700;
-            color: #2d3748;
-        }
-
-        .comment-date {
-            color: #a0aec0;
-            font-size: 0.8rem;
-            float: right;
-        }
-
-        @media (max-width: 600px) {
-            .article-title {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
 </head>
 
-<body>
+<body class="page-article">
 
     <article class="article-container">
         <a href="javascript:history.back()" class="back-link">← Назад</a>

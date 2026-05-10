@@ -31,11 +31,14 @@ $mockCommentsCount = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="unit">Моя лента | Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/pages/feed.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
+<body class="page-feed">
     <header class="main-header">
         <div class="container header-top">
             <div class="header-left">
@@ -83,7 +86,7 @@ $mockCommentsCount = [
     <main class="section">
         <div class="container">
             <?php if (false): ?>
-                <div style="text-align: center; padding: 50px 20px; background: #f9f9f9; border-radius: 8px;">
+                <div class="feed-auth-box">
                     <h2 id="lenta_auth_title">Ваша персональная лента</h2>
                     <p id="lenta_auth_text">Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.</p>
                     <a href="/auth/login.html" class="auth-btn-black" style="display: inline-block; margin-top: 15px;">Войти</a>
