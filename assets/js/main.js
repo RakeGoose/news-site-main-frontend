@@ -13,7 +13,7 @@ document.querySelectorAll('.lang-item').forEach(link => {
 
 function changeLanguage() {
     let hash = window.location.hash.substr(1).toLowerCase();
-    
+
     // Если хеша нет, берем из localStorage или ставим ru
     if (!allLang.includes(hash)) {
         hash = localStorage.getItem('lang') || 'ru';
@@ -61,3 +61,15 @@ if (document.readyState === 'loading') {
 }
 
 window.addEventListener('hashchange', changeLanguage);
+
+// Mobile Navbar Toggler
+document.addEventListener('DOMContentLoaded', () => {
+    const toggler = document.querySelector('.navbar-toggler');
+    const collapse = document.querySelector('.navbar-collapse');
+
+    if (toggler && collapse) {
+        toggler.addEventListener('click', () => {
+            collapse.classList.toggle('show');
+        });
+    }
+});

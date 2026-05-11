@@ -26,11 +26,13 @@
     top: 24px;
 }
 
-.page-home .sidebar-box + .sidebar-box {
+.page-home .sidebar-box+.sidebar-box {
     margin-top: 24px;
 }
 
+
 @media (max-width: 1100px) {
+
     .page-home .sidebar-left,
     .page-home .sidebar-right {
         position: static;
