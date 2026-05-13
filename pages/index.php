@@ -328,21 +328,21 @@ $mockCommentsCount = [
         <div class="container footer-grid">
             <div class="footer-brand">
                 <div class="footer-logo">LOGOTIP NEWS</div>
-                <p class="footer-tagline">Свежие новости и аналитика каждый день в вашем распоряжении.</p>
+                <div class="footer-legal-info">
+                    <p id="certificate1">Свидетельство о постановке на учет №KZ05VFY00030397</p>
+                    <p id="certificate2">Выдано 22.12.2020</p>
+                </div>
                 <div class="footer-socials">
                     <a href="#" class="social-link" aria-label="Instagram">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
                         stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
                         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        <span>Instagram</span>
                     </a>
-                    <a href="#" class="social-link" aria-label="Telegram">
+                    <a href="#" class="social-link" aria-label="TikTok">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                        stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2L15 22L11 13L2 9L22 2Z"/></svg>
-                    </a>
-                    <a href="#" class="social-link" aria-label="Facebook">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                        stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                        <span>TikTok</span>
                     </a>
                 </div>
             </div>
@@ -350,44 +350,30 @@ $mockCommentsCount = [
             <div class="footer-nav-section">
                 <h4 class="footer-title">Компания</h4>
                 <nav class="footer-links">
-                    <a href="/pages/about.php">Про нас</a>
-                    <a href="#">Редакция</a>
-                    <a href="#">Вакансии</a>
-                    <a href="/pages/contacts.php">Контакты</a>
+                    <a href="/pages/about.php" id="about_us">Про нас</a>
+                    <a href="#" id="redaction">Редакция</a>
+                    <a href="#" id="vacancy">Вакансии</a>
                 </nav>
             </div>
 
             <div class="footer-nav-section">
                 <h4 class="footer-title">Информация</h4>
                 <nav class="footer-links">
-                    <a href="#">Реклама</a>
-                    <a href="#">Поддержка</a>
-                    <a href="#">Конфиденциальность</a>
-                    <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-                        <a href="/admin/admin.php" style="color: var(--color-accent); font-weight: bold;">Admin Panel</a>
-                    <?php endif; ?>
+                    <a href="/pages/contacts.php" id="contact">Контакты</a>
+                    <a href="#" id="advertisement">Реклама</a>
+                    <a href="#" id="support">Поддержка</a>
                 </nav>
             </div>
 
-            <div class="footer-newsletter">
-                <h4 class="footer-title">Подписка</h4>
-                <p>Получайте лучшие новости и эксклюзивы на вашу почту.</p>
-                <form class="newsletter-form" onsubmit="return false;">
-                    <input type="email" placeholder="Email адрес" required>
-                    <button type="submit" aria-label="Subscribe">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polyline points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                    </button>
-                </form>
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <div class="footer-nav-section">
+                <h4 class="footer-title">Админ-панель</h4>
+                <nav class="footer-links">
+                    <a href="/admin/admin.php" style="color: var(--color-accent); font-weight: bold;">Управление сайтом</a>
+                    <a href="/admin/admin_actions.php">Управление новостями</a>
+                </nav>
             </div>
-        </div>
-
-        <div class="footer-bottom">
-            <div class="container footer-bottom-content">
-                <div class="footer-legal-info">
-                    <p>Свидетельство о постановке на учет №KZ05VFY00030397 выдано 22.12.2020</p>
-                </div>
-                <p class="footer-copyright">© <?= date('Y') ?> Logotip News. Все права защищены.</p>
-            </div>
+            <?php endif; ?>
         </div>
     </footer>
     <script src="/assets/js/lang.js"></script>

@@ -121,6 +121,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Touch Swipe Logic
+    let touchStartX = 0;
+    let touchEndX = 0;
+    const heroCarousel = document.querySelector('.hero-carousel');
+
+    if (heroCarousel) {
+        heroCarousel.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        heroCarousel.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+    }
+
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        if (touchEndX < touchStartX - swipeThreshold) {
+            nextSlide();
+            resetAutoPlay();
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+            prevSlide();
+            resetAutoPlay();
+        }
+    }
+
     function startAutoPlay() {
         autoPlayInterval = setInterval(nextSlide, 6000);
     }
