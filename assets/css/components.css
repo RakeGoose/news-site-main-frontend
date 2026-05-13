@@ -541,8 +541,8 @@
 .carousel-nav {
     position: absolute;
     top: 50%;
-    left: 40px;
-    right: 40px;
+    left: calc(50% - 780px);
+    right: calc(50% - 780px);
     display: flex;
     justify-content: space-between;
     transform: translateY(-50%);
@@ -550,10 +550,31 @@
     z-index: 10;
 }
 
-@media (min-width: 1600px) {
+@media (max-width: 1520px) {
     .carousel-nav {
-        left: calc(50% - 740px);
-        right: calc(50% - 740px);
+        top: auto;
+        bottom: -60px;
+        /* Same as dots */
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+        width: 260px;
+        /* Space for dots in the middle */
+        height: 44px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .carousel-prev,
+    .carousel-next {
+        width: 44px;
+        height: 44px;
+        pointer-events: auto;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
     }
 }
 
