@@ -95,24 +95,18 @@ $mockCommentsCount = [
 
                 <?php if (!empty($result)): ?>
 
-                    <?php
-                    $featured = $result[0];
-                    ?>
+                    <?php $featured = $result[0]; ?>
 
-                    <!-- FEATURED NEWS -->
                     <article class="featured-news-card">
                         <a href="/pages/article.php?id=<?= $featured['id'] ?>" class="featured-news-link">
 
                             <img
-                                    src="/uploads/news/<?= htmlspecialchars($featured['image']) ?>"
-                                    class="featured-news-image"
-                                    alt="news">
+                                src="/uploads/news/<?= htmlspecialchars($featured['image']) ?>"
+                                class="featured-news-image"
+                                alt="news">
 
                             <div class="featured-news-content">
-
-                            <span class="featured-news-category">
-                                Аналитика
-                            </span>
+                                <span class="featured-news-category">Аналитика</span>
 
                                 <h2 class="featured-news-title">
                                     <?= htmlspecialchars($featured['title']) ?>
@@ -123,15 +117,15 @@ $mockCommentsCount = [
                                 </p>
 
                                 <div class="featured-news-meta">
-                                <span>
-                                    <i class="far fa-calendar-alt"></i>
-                                    <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
-                                </span>
-
                                     <span>
-                                    <i class="far fa-eye"></i>
-                                    <?= $featured['views'] ?>
-                                </span>
+                                        <i class="far fa-calendar-alt"></i>
+                                        <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
+                                    </span>
+
+                                        <span>
+                                        <i class="far fa-eye"></i>
+                                        <?= $featured['views'] ?>
+                                    </span>
                                 </div>
 
                             </div>
@@ -140,39 +134,34 @@ $mockCommentsCount = [
 
                     <!-- SMALL NEWS -->
                     <div class="category-news-list">
-
                         <?php foreach (array_slice($result, 1) as $row): ?>
 
                             <article class="category-news-item">
-
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="category-news-link">
 
                                     <img
-                                            src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
-                                            class="category-news-thumb"
-                                            alt="news">
+                                        src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
+                                        class="category-news-thumb"
+                                        alt="news">
 
                                     <div class="category-news-info">
 
-                                    <span class="category-news-label">
-                                        Аналитика
-                                    </span>
+                                        <span class="category-news-label">Аналитика</span>
 
                                         <h3 class="category-news-title">
                                             <?= htmlspecialchars($row['title']) ?>
                                         </h3>
 
                                         <div class="category-news-meta">
-
-                                        <span>
-                                            <i class="far fa-calendar-alt"></i>
-                                            <?= date('d.m.Y', strtotime($row['created_at'])) ?>
-                                        </span>
+                                            <span>
+                                                <i class="far fa-calendar-alt"></i>
+                                                <?= date('d.m.Y', strtotime($row['created_at'])) ?>
+                                            </span>
 
                                             <span>
-                                            <i class="far fa-eye"></i>
-                                            <?= $row['views'] ?>
-                                        </span>
+                                                <i class="far fa-eye"></i>
+                                                <?= $row['views'] ?>
+                                            </span>
 
                                         </div>
 
@@ -228,19 +217,9 @@ $mockCommentsCount = [
                 </div>
 
                 <div class="telegram-box">
-
-                    <h3>
-                        Будьте в курсе важных новостей
-                    </h3>
-
-                    <p>
-                        Подписывайтесь на нашу рассылку
-                    </p>
-
-                    <button>
-                        Подписаться
-                    </button>
-
+                    <h3>Будьте в курсе важных новостей</h3>
+                    <p>Подписывайтесь на нашу рассылку</p>
+                    <button>Подписаться</button>
                 </div>
 
             </aside>
