@@ -1,6 +1,6 @@
 /* Прячем страницу до загрузки перевода dsa*/
 body {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
 

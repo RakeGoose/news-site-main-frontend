@@ -46,20 +46,26 @@ $mockCommentsCount = [
 <body class="page-home">
 
     <header class="main-header">
-        <div class="container header-top">
-            <div class="header-left">
-                <button class="search-btn">🔍</button>
+        <div class="container header-top-row">
+            <div class="header-empty"></div>
+            <div class="logo-container">
+                <h1 class="logo">Logotip news</h1>
             </div>
-
-            <div class="header-center">
+            <div class="header-actions">
+                <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
                 <div class="lang-switcher">
-                    <a href="#kz" class="lang-item">KAZ</a>
-                    <a href="#ru" class="lang-item">RUS</a>
-                    <a href="#en" class="lang-item">ENG</a>
+                    <div class="lang-dropdown">
+                        <button class="lang-btn">
+                            <span class="lang-text"><?= $lang ?></span>
+                            <span class="lang-arrow">▼</span>
+                        </button>
+                        <div class="lang-list">
+                            <a href="#kz" class="lang-item">kaz</a>
+                            <a href="#ru" class="lang-item">rus</a>
+                            <a href="#en" class="lang-item">eng</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="header-right">
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/auth/logout.php" class="auth-btn-black" id="logout">Выйти</a>
                 <?php else: ?>
@@ -68,14 +74,15 @@ $mockCommentsCount = [
             </div>
         </div>
 
-        <div class="logo-container">
-            <h1 class="logo">Logotip news</h1>
+        <div class="container header-search-row">
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск по сайту">
+            </div>
         </div>
-
-        <nav class="main-nav">
+        <!-- <nav class="main-nav">
             <div class="container nav-flex">
-                <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость 📢</a>
                 <ul class="nav-links">
+                    <li><a href="/index.php" class="active">Главная</a></li>
                     <li><a href="/pages/politics.php" id="politics">Политика</a></li>
                     <li><a href="/pages/analytics.php" id="analytics">Аналитика</a></li>
                     <li><a href="/pages/world.php" id="world">Мировые новости</a></li>
@@ -84,29 +91,120 @@ $mockCommentsCount = [
                     <li><a href="/pages/feed.php" id="my_lenta">Моя лента</a></li>
                 </ul>
             </div>
-        </nav>
-    </header>
+        </nav> -->
 
-    <div class="container main-layout">
-        <aside class="sidebar-left">
-            <div class="sidebar-box">
-                <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
-                <ol class="author-list" id="best-authors-list">
-                    <?php if (!empty($mockAuthors)): ?>
-                        <?php foreach ($mockAuthors as $author):
-                            $nameParts = explode(' ', trim($author['name']));
-                            $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
-                            ?>
-                            <li class="author-item">
-                                <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
+        <div class="container padding_786">
+                <nav class="navbar navbar-toggleable-md navbar-light">
+                    <button class="navbar-toggler navbar-toggler-right mt-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="fa fa-bars">☰</span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" id="home">Главная</a>
                             </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="no-data" id="no-data">Список пуст</p>
-                    <?php endif; ?>
-                </ol>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/analytics.php" id="analytics">Аналитика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/world.php" id="world">Мировые новости</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/sport.php" id="sports">Спорт</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/feed.php" id="my_lenta">Моя лента</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
-        </aside>
+
+
+
+                
+            </header>
+
+            <section class="hero-section">
+                <div class="container">
+                    <div class="hero-carousel">
+                        <?php 
+                        $carousel_news = array_slice($news_result, 0, 3);
+                        foreach($carousel_news as $index => $item): 
+                        ?>
+                        <div class="hero-item <?= $index === 0 ? 'active' : '' ?>">
+                            <div class="hero-content">
+                                <span class="hero-category"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
+                                <p class="hero-excerpt"><?= mb_strimwidth(strip_tags($item['content']), 0, 200, "...") ?></p>
+                                <div class="hero-meta">
+                                    <span class="hero-meta-item hero-date"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
+                                    <span class="hero-meta-item hero-views">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                                        stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                        <?= $item['views'] ?>
+                                    </span>
+                                    <span class="hero-meta-item hero-comments">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                        stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        <?= $mockCommentsCount[$item['id']] ?? 0 ?>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="hero-image-wrapper">
+                                <img src="/uploads/news/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="hero-img">
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                        
+                        <div class="carousel-nav">
+                            <button class="carousel-prev" aria-label="Previous">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" 
+                                stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="carousel-next" aria-label="Next">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" 
+                                stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
+                        </div>
+
+                        <div class="carousel-dots">
+                            <?php foreach($carousel_news as $index => $item): ?>
+                                <span class="dot <?= $index === 0 ? 'active' : '' ?>"></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <div class="container main-layout">
+                <aside class="sidebar-left">
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
+                        <ol class="author-list" id="best-authors-list">
+                            <?php if (!empty($mockAuthors)): ?>
+                                <?php foreach ($mockAuthors as $author):
+                                    $nameParts = explode(' ', trim($author['name']));
+                                    $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
+                                    ?>
+                                    <li class="author-item">
+                                        <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="no-data" id="no-data">Список пуст</p>
+                            <?php endif; ?>
+                        </ol>
+                    </div>
+                </aside>
 
         <main class="content-center">
             <?php if (!empty($news_result)): ?>
