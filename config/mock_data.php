@@ -4,7 +4,7 @@ declare(strict_types=1);
 $mockNews = [
     [
         'id' => 1,
-        'image' => 'news_69bfb8a8c3a62.jpeg',
+        'image' => 'einstein.jpg',
         'inner_image' => null,
         'views' => 124,
         'created_at' => '2026-05-09 12:00:00',
