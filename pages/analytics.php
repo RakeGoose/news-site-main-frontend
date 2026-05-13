@@ -1,24 +1,28 @@
 <?php
 session_start();
+
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
+require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
-$category_name = 'Аналитика';
+$lang = $_SESSION['lang'] ?? 'ru';
+$category_slug = 'analytics';
 
-$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content 
-        FROM news n
-        JOIN categories c ON n.category_id = c.id
-        JOIN news_translations t ON n.id = t.news_id
-        WHERE c.name = ? 
-        AND n.status = 'approved' 
-        AND t.language = ?
-        ORDER BY n.created_at DESC";
+$result = array_values(array_filter($mockNews, function ($news) use ($lang, $category_slug) {
+    return ($news['status'] ?? '') === 'approved'
+            && ($news['language'] ?? 'ru') === $lang
+            && ($news['category_slug'] ?? '') === $category_slug;
+}));
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("ss", $category_name, $lang);
-$stmt->execute();
-$result = $stmt->get_result();
+usort($result, function ($a, $b) {
+    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
+});
+
+$mockCommentsCount = [
+        1 => 4,
+        2 => 2,
+        3 => 7,
+];
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -27,11 +31,14 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="unit">Аналитика | Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/pages/category.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
+<body class="page-category page-analytics">
     <header class="main-header">
         <div class="container header-top">
             <div class="header-left">
@@ -56,7 +63,7 @@ $result = $stmt->get_result();
         </div>
 
         <div class="logo-container">
-            <a href="index.php" style="text-decoration: none; color: inherit;">
+            <a href="/pages/index.php" style="text-decoration: none; color: inherit;">
                 <h1 class="logo">Logotip news</h1>
             </a>
         </div>
@@ -76,48 +83,168 @@ $result = $stmt->get_result();
         </nav>
     </header>
 
-    <main class="section">
-        <div class="container">
-            <ul class="news-grid-list">
-                <?php if ($result->num_rows > 0): ?>
-                    <?php while ($row = $result->fetch_assoc()): 
-                        // Получаем количество комментариев для каждой новости
-                        $n_id = $row['id'];
-                        $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
-                        $comm_count = $c_res->fetch_assoc()['count'];
+    <main class="section category-layout">
+        <div class="container category-container">
+
+            <div class="category-main">
+
+                <div class="category-heading">
+                    <h1>Аналитика</h1>
+                    <p>Глубокий анализ событий, тенденций и процессов в Казахстане и мире.</p>
+                </div>
+
+                <?php if (!empty($result)): ?>
+
+                    <?php
+                    $featured = $result[0];
                     ?>
-                        <li class="news-item-card">
-                            <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
-                                <img src="<?= htmlspecialchars($row['image'] ?: 'img/default.jpg') ?>?tr=w-800,q-auto,f-auto" alt="img" class="news-item__img" loading="lazy">
 
-                                <h3 class="news-item__title">
-                                    <?= htmlspecialchars($row['title']) ?>
-                                </h3>
+                    <!-- FEATURED NEWS -->
+                    <article class="featured-news-card">
+                        <a href="/pages/article.php?id=<?= $featured['id'] ?>" class="featured-news-link">
 
-                                <p class="news-item__excerpt">
-                                    <?= mb_strimwidth(strip_tags($row['content']), 0, 130, "...") ?>
+                            <img
+                                    src="/uploads/news/<?= htmlspecialchars($featured['image']) ?>"
+                                    class="featured-news-image"
+                                    alt="news">
+
+                            <div class="featured-news-content">
+
+                            <span class="featured-news-category">
+                                Аналитика
+                            </span>
+
+                                <h2 class="featured-news-title">
+                                    <?= htmlspecialchars($featured['title']) ?>
+                                </h2>
+
+                                <p class="featured-news-excerpt">
+                                    <?= mb_strimwidth(strip_tags($featured['content']), 0, 180, "...") ?>
                                 </p>
-                            </a>
-                            
-                            <div class="news-item__footer" style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #f0f0f0; margin-top: auto;">
-                                <div class="news-stats" style="display: flex; gap: 15px;">
-                                    <span title="Комментарии" style="color: #7f8c8d; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
-                                        <i class="far fa-comment"></i> <?= $comm_count ?>
-                                    </span>
-                                    <span title="Просмотры" style="color: #7f8c8d; font-size: 0.85rem; display: flex; align-items: center; gap: 5px;">
-                                        <i class="far fa-eye"></i> <?= $row['views'] ?>
-                                    </span>
-                                </div>
-                                <span style="color: #95a5a6; font-size: 0.85rem;">
-                                    <i class="far fa-calendar-alt"></i> <?= date('d.m.Y', strtotime($row['created_at'])) ?>
+
+                                <div class="featured-news-meta">
+                                <span>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                 </span>
+
+                                    <span>
+                                    <i class="far fa-eye"></i>
+                                    <?= $featured['views'] ?>
+                                </span>
+                                </div>
+
                             </div>
-                        </li>
-                    <?php endwhile; ?>
-                <?php else: ?>
-                    <div class="no-news" id="no_news_found">Пока нет аналитических новостей на выбранном языке.</div>
+                        </a>
+                    </article>
+
+                    <!-- SMALL NEWS -->
+                    <div class="category-news-list">
+
+                        <?php foreach (array_slice($result, 1) as $row): ?>
+
+                            <article class="category-news-item">
+
+                                <a href="/pages/article.php?id=<?= $row['id'] ?>" class="category-news-link">
+
+                                    <img
+                                            src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
+                                            class="category-news-thumb"
+                                            alt="news">
+
+                                    <div class="category-news-info">
+
+                                    <span class="category-news-label">
+                                        Аналитика
+                                    </span>
+
+                                        <h3 class="category-news-title">
+                                            <?= htmlspecialchars($row['title']) ?>
+                                        </h3>
+
+                                        <div class="category-news-meta">
+
+                                        <span>
+                                            <i class="far fa-calendar-alt"></i>
+                                            <?= date('d.m.Y', strtotime($row['created_at'])) ?>
+                                        </span>
+
+                                            <span>
+                                            <i class="far fa-eye"></i>
+                                            <?= $row['views'] ?>
+                                        </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </a>
+
+                            </article>
+
+                        <?php endforeach; ?>
+
+                    </div>
+
                 <?php endif; ?>
-            </ul>
+
+            </div>
+
+            <!-- SIDEBAR -->
+            <aside class="category-sidebar">
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card-title">
+                        Авторы в аналитике
+                    </h3>
+
+                    <div class="sidebar-authors">
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=1">
+                            <div>
+                                <strong>Пупкин Запупкин</strong>
+                                <span>28 статей</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=2">
+                            <div>
+                                <strong>Гена Петрович</strong>
+                                <span>19 статей</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=3">
+                            <div>
+                                <strong>Жанибек Бали</strong>
+                                <span>15 статей</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="telegram-box">
+
+                    <h3>
+                        Будьте в курсе важных новостей
+                    </h3>
+
+                    <p>
+                        Подписывайтесь на нашу рассылку
+                    </p>
+
+                    <button>
+                        Подписаться
+                    </button>
+
+                </div>
+
+            </aside>
+
         </div>
     </main>
 

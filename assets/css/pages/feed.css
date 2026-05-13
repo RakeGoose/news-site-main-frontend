@@ -1,0 +1,53 @@
+.page-feed .section {
+    padding: 48px 0 72px;
+}
+
+.page-feed .news-grid-list {
+    align-items: stretch;
+}
+
+.page-feed .news-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-soft);
+}
+
+.page-feed .news-item__title {
+    min-height: 76px;
+}
+
+.page-feed .news-item__excerpt {
+    min-height: 84px;
+}
+
+.page-feed .no-news {
+    grid-column: 1 / -1;
+    padding: 64px 24px;
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+.page-feed .feed-auth-box {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 32px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: 28px;
+    box-shadow: var(--shadow-soft);
+}
+
+.page-feed .feed-auth-box h2 {
+    margin: 0 0 12px;
+    font-size: 34px;
+    font-weight: 900;
+    letter-spacing: -0.04em;
+}
+
+.page-feed .feed-auth-box p {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 16px;
+}
