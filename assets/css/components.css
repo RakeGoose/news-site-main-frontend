@@ -379,10 +379,11 @@
 .hero-section {
     background: #121212;
     color: #ffffff;
-    padding: 60px 0 160px;
+    padding: 80px 0 180px;
     position: relative;
-    clip-path: ellipse(160% 100% at 50% 0%);
-    margin-bottom: 50px;
+    width: 100%;
+    clip-path: ellipse(140% 100% at 50% 0%);
+    margin-bottom: -1px;
     z-index: 5;
 }
 
@@ -589,6 +590,8 @@
 
     .hero-section {
         padding: 40px 0 120px;
+        margin-bottom: -60px;
+        clip-path: ellipse(150% 100% at 50% 0%);
     }
 }
 
