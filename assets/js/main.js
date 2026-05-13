@@ -73,3 +73,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Hero Carousel Logic
+document.addEventListener('DOMContentLoaded', () => {
+    const heroItems = document.querySelectorAll('.hero-item');
+    const dots = document.querySelectorAll('.dot');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+    let currentIndex = 0;
+    let autoPlayInterval;
+
+    if (heroItems.length === 0) return;
+
+    function showSlide(index) {
+        heroItems.forEach(item => item.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        heroItems[index].classList.add('active');
+        dots[index].classList.add('active');
+        currentIndex = index;
+    }
+
+    function nextSlide() {
+        let index = (currentIndex + 1) % heroItems.length;
+        showSlide(index);
+    }
+
+    function prevSlide() {
+        let index = (currentIndex - 1 + heroItems.length) % heroItems.length;
+        showSlide(index);
+    }
+
+    if (nextBtn) nextBtn.addEventListener('click', () => {
+        nextSlide();
+        resetAutoPlay();
+    });
+
+    if (prevBtn) prevBtn.addEventListener('click', () => {
+        prevSlide();
+        resetAutoPlay();
+    });
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            showSlide(index);
+            resetAutoPlay();
+        });
+    });
+
+    function startAutoPlay() {
+        autoPlayInterval = setInterval(nextSlide, 6000);
+    }
+
+    function resetAutoPlay() {
+        clearInterval(autoPlayInterval);
+        startAutoPlay();
+    }
+
+    startAutoPlay();
+});
