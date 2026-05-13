@@ -1,28 +1,25 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = $_SESSION['lang'] ?? 'ru';
+$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$result = array_values(array_filter($mockNews, function ($news) use ($lang) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang;
-}));
+// Если это "Моя лента", логично показывать последние новости из всех категорий, 
+// либо те, на которые пользователь мог бы быть подписан.
+// Для начала сделаем вывод последних 20 новостей на выбранном языке.
+$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content 
+        FROM news n
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE n.status = 'approved' 
+        AND t.language = ?
+        ORDER BY n.created_at DESC 
+        LIMIT 20";
 
-usort($result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
-
-$result = array_slice($result, 0, 20);
-
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $lang);
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -31,14 +28,11 @@ $mockCommentsCount = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="unit">Моя лента | Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
-    <link rel="stylesheet" href="/assets/css/layout.css">
-    <link rel="stylesheet" href="/assets/css/components.css">
-    <link rel="stylesheet" href="/assets/css/pages/feed.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body class="page-feed">
+<body>
     <header class="main-header">
         <div class="container header-top">
             <div class="header-left">
@@ -85,25 +79,26 @@ $mockCommentsCount = [
 
     <main class="section">
         <div class="container">
-            <?php if (false): ?>
-                <div class="feed-auth-box">
+            <?php if (!isset($_SESSION['user'])): ?>
+                <div style="text-align: center; padding: 50px 20px; background: #f9f9f9; border-radius: 8px;">
                     <h2 id="lenta_auth_title">Ваша персональная лента</h2>
                     <p id="lenta_auth_text">Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.</p>
                     <a href="/auth/login.html" class="auth-btn-black" style="display: inline-block; margin-top: 15px;">Войти</a>
                 </div>
             <?php else: ?>
                 <ul class="news-grid-list">
-                    <?php if (!empty($result)): ?>
-                        <?php foreach ($result as $row):
+                    <?php if ($result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()):
                             $n_id = $row['id'];
-                            $comm_count = $mockCommentsCount[$n_id] ?? 0;
+                            $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
+                            $comm_count = $c_res->fetch_assoc()['count'];
                         ?>
                             <li class="news-item-card">
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
                                     <?php if ($row['image']): ?>
-                                        <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
-                                             class="news-item__img"
-                                             loading="lazy">
+                                    <img src="<?= htmlspecialchars($row['image']) ?>?tr=w-800,q-auto,f-auto"
+                                        class="news-item__img"
+                                        loading="lazy">
                                 <?php endif; ?>
                                     <h3 class="news-item__title"><?= htmlspecialchars($row['title']) ?></h3>
                                     <p class="news-item__excerpt">
@@ -124,7 +119,7 @@ $mockCommentsCount = [
                                     </span>
                                 </div>
                             </li>
-                        <?php endforeach; ?>
+                        <?php endwhile; ?>
                     <?php else: ?>
                         <div class="no-news" id="no_news_found">В вашей ленте пока пусто.</div>
                     <?php endif; ?>

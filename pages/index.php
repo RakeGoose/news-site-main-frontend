@@ -1,34 +1,24 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = $_SESSION['lang'] ?? 'ru';
+$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$news_result = array_values(array_filter($mockNews, function ($news) use ($lang) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang;
-}));
+$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content, c.name as category_name
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE n.status = 'approved'     
+        AND t.language = ? 
+        ORDER BY n.created_at DESC";
 
-usort($news_result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
 
-$mockAuthors = [
-        ['name' => 'Алихан Сейсенов'],
-        ['name' => 'Мария Ким'],
-        ['name' => 'Рустем Ахметов'],
-        ['name' => 'Дана Омарова'],
-        ['name' => 'Ерасыл Нурлан'],
-];
 
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $lang);
+$stmt->execute();
+$news_result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -37,13 +27,10 @@ $mockCommentsCount = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/global.css">
-    <link rel="stylesheet" href="/assets/css/layout.css">
-    <link rel="stylesheet" href="/assets/css/components.css">
-    <link rel="stylesheet" href="/assets/css/pages/home.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
-<body class="page-home">
+<body>
 
     <header class="main-header">
         <div class="container header-top">
@@ -92,16 +79,22 @@ $mockCommentsCount = [
             <div class="sidebar-box">
                 <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
                 <ol class="author-list" id="best-authors-list">
-                    <?php if (!empty($mockAuthors)): ?>
-                        <?php foreach ($mockAuthors as $author):
+                    <?php
+                    $author_query = "SELECT name FROM users WHERE role != 'admin' ORDER BY rating DESC LIMIT 7";
+                    $authors_result = $conn->query($author_query);
+
+                    if ($authors_result && $authors_result->num_rows > 0):
+                        while ($author = $authors_result->fetch_assoc()):
                             $nameParts = explode(' ', trim($author['name']));
                             $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
-                            ?>
+                    ?>
                             <li class="author-item">
                                 <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
                             </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php
+                        endwhile;
+                    else:
+                        ?>
                         <p class="no-data" id="no-data">Список пуст</p>
                     <?php endif; ?>
                 </ol>
@@ -109,18 +102,19 @@ $mockCommentsCount = [
         </aside>
 
         <main class="content-center">
-            <?php if (!empty($news_result)): ?>
-                <?php foreach ($news_result as $row):
+            <?php if ($news_result->num_rows > 0): ?>
+                <?php while ($row = $news_result->fetch_assoc()):
                     $n_id = $row['id'];
                     // Получаем только кол-во комментариев
-                    $comm_count = $mockCommentsCount[$n_id] ?? 0;
+                    $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
+                    $comm_count = $c_res->fetch_assoc()['count'];
                 ?>
                     <article class="news-card">
                         <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link-container">
                             <?php if ($row['image']): ?>
-                                <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
-                                     class="news-main-img"
-                                     loading="lazy">
+                                <img src="<?= htmlspecialchars($row['image']) ?>?tr=w-800,q-auto,f-auto"
+                                    class="news-main-img"
+                                    loading="lazy">
                             <?php endif; ?>
 
                             <div class="news-info">
@@ -152,7 +146,7 @@ $mockCommentsCount = [
                             </div>
                         </div>
                     </article>
-                <?php endforeach; ?>
+                <?php endwhile; ?>
             <?php else: ?>
                 <div class="no-news">Новостей пока нет.</div>
             <?php endif; ?>
@@ -162,16 +156,23 @@ $mockCommentsCount = [
             <div class="sidebar-box side-news">
                 <h3 class="sidebar-title" id="all-news">Все новости</h3>
                 <div class="side-news-list">
-                    <?php if (!empty($news_result)): ?>
-                        <?php foreach (array_slice($news_result, 0, 5) as $side_row): ?>
+                    <?php
+                    if ($news_result && $news_result->num_rows > 0):
+                        $news_result->data_seek(0);
+                        $count = 0;
+                        while ($side_row = $news_result->fetch_assoc()):
+                            if ($count >= 5) break;
+                    ?>
                             <div class="side-news-item">
                                 <a href="/pages/article.php?id=<?= $side_row['id'] ?>" class="side-news-link">
                                     <span class="side-news-date"><?= date('H:i', strtotime($side_row['created_at'])) ?></span>
                                     <p class="side-news-title"><?= htmlspecialchars($side_row['title']) ?></p>
                                 </a>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
+                        <?php
+                            $count++;
+                        endwhile;
+                    else: ?>
                         <p class="no-data">Новостей нет</p>
                     <?php endif; ?>
                 </div>
