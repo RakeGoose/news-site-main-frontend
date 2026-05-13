@@ -630,13 +630,6 @@
     border-radius: 6px;
 }
 
-@media (max-width: 1600px) {
-    .carousel-nav {
-        left: 20px;
-        right: 20px;
-    }
-}
-
 @media (max-width: 1200px) {
     .carousel-nav {
         left: 0;
