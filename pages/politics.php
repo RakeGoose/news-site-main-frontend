@@ -79,44 +79,143 @@ $mockCommentsCount = [
         </nav>
     </header>
 
-    <main class="section">
-        <div class="container">
-            <ul class="news-grid-list">
-                <?php if (!empty($result)): ?>
-                    <?php foreach ($result as $row):
-                        $n_id = $row['id'];
-                        $comm_count = $mockCommentsCount[$n_id] ?? 0;
-                    ?>
-                        <li class="news-item-card">
-                            <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
-                                <img src="/uploads/news/<?= htmlspecialchars($row['image'] ?: 'news_69bfb8a8c3a62.jpeg') ?>" alt="img" class="news-item__img">
-                                <h3 class="news-item__title">
-                                    <?= htmlspecialchars($row['title']) ?>
-                                </h3>
-                                <p class="news-item__excerpt">
-                                    <?= mb_strimwidth(strip_tags($row['content']), 0, 130, "...") ?>
-                                </p>
-                            </a>
+    <main class="section category-layout">
+        <div class="container category-container">
 
-                            <div class="news-item__footer" style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #eee; margin-top: auto;">
-                                <div class="news-interactions" style="display: flex; gap: 15px; align-items: center;">
-                                    <span title="Комментарии" style="color: #7f8c8d; font-size: 0.9rem;">
-                                        <i class="far fa-comment"></i> <?= $comm_count ?>
-                                    </span>
-                                    <span title="Просмотры" style="color: #7f8c8d; font-size: 0.9rem;">
-                                        <i class="far fa-eye"></i> <?= $row['views'] ?>
-                                    </span>
-                                </div>
-                                <span class="news-date" style="color: #7f8c8d; font-size: 0.85rem;">
-                                    <?= date('d.m.Y', strtotime($row['created_at'])) ?>
+            <div class="category-main">
+
+                <div class="category-heading">
+                    <h1>Политика</h1>
+                    <p>Главные политические события, решения и заявления в Казахстане и мире.</p>
+                </div>
+
+                <?php if (!empty($result)): ?>
+
+                    <?php $featured = $result[0]; ?>
+
+                    <article class="featured-news-card">
+                        <a href="/pages/article.php?id=<?= $featured['id'] ?>" class="featured-news-link">
+
+                            <img
+                                    src="/uploads/news/<?= htmlspecialchars($featured['image']) ?>"
+                                    class="featured-news-image"
+                                    alt="news">
+
+                            <div class="featured-news-content">
+
+                                <span class="featured-news-category">Политика</span>
+
+                                <h2 class="featured-news-title">
+                                    <?= htmlspecialchars($featured['title']) ?>
+                                </h2>
+
+                                <p class="featured-news-excerpt">
+                                    <?= mb_strimwidth(strip_tags($featured['content']), 0, 180, "...") ?>
+                                </p>
+
+                                <div class="featured-news-meta">
+                                <span>
+                                    <i class="far fa-calendar-alt"></i>
+                                    <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                 </span>
+
+                                    <span>
+                                    <i class="far fa-eye"></i>
+                                    <?= $featured['views'] ?>
+                                </span>
+                                </div>
+
                             </div>
-                        </li>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="no-news">Пока нет новостей на выбранном языке.</div>
+                        </a>
+                    </article>
+
+                    <div class="category-news-list">
+                        <?php foreach (array_slice($result, 1) as $row): ?>
+
+                            <article class="category-news-item">
+                                <a href="/pages/article.php?id=<?= $row['id'] ?>" class="category-news-link">
+
+                                    <img
+                                            src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
+                                            class="category-news-thumb"
+                                            alt="news">
+
+                                    <div class="category-news-info">
+
+                                        <span class="category-news-label">Политика</span>
+
+                                        <h3 class="category-news-title">
+                                            <?= htmlspecialchars($row['title']) ?>
+                                        </h3>
+
+                                        <div class="category-news-meta">
+                                        <span>
+                                            <i class="far fa-calendar-alt"></i>
+                                            <?= date('d.m.Y', strtotime($row['created_at'])) ?>
+                                        </span>
+
+                                            <span>
+                                            <i class="far fa-eye"></i>
+                                            <?= $row['views'] ?>
+                                        </span>
+                                        </div>
+
+                                    </div>
+
+                                </a>
+                            </article>
+
+                        <?php endforeach; ?>
+                    </div>
+
                 <?php endif; ?>
-            </ul>
+
+            </div>
+
+            <aside class="category-sidebar">
+
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card-title">
+                        Авторы в политике
+                    </h3>
+
+                    <div class="sidebar-authors">
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=4" alt="">
+                            <div>
+                                <strong>Алихан Сейсенов</strong>
+                                <span>24 статьи</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=5" alt="">
+                            <div>
+                                <strong>Дана Омарова</strong>
+                                <span>18 статей</span>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-author">
+                            <img src="https://i.pravatar.cc/60?img=6" alt="">
+                            <div>
+                                <strong>Ерасыл Нурлан</strong>
+                                <span>11 статей</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="telegram-box">
+                    <h3>Будьте в курсе важных новостей</h3>
+                    <p>Подписывайтесь на нашу рассылку</p>
+                    <button>Подписаться</button>
+                </div>
+
+            </aside>
+
         </div>
     </main>
 
