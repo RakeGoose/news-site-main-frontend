@@ -286,15 +286,15 @@ $mockCommentsCount = [
 
             <!-- Other News Section (Full Width) -->
             <?php if (!empty($news_result)): 
-                $other_news = array_slice($news_result, 3, 5);
-                if (!empty($other_news)):
-            ?>
+                $other_news = array_slice($news_result, 3, 10);
+                if (!empty($other_news)): ?>
             <div class="other-news-wrapper">
                 <div class="container">
                     <section class="other-news-section-full">
                         <div class="section-header">
                             <h3 class="section-title">Другие новости</h3>
                             <div class="section-nav">
+                                <div class="section-dots" id="other-news-dots"></div>
                                 <button class="nav-btn prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
                                  stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                  <polyline points="15 18 9 12 15 6"/></svg></button>

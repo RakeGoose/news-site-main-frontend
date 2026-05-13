@@ -158,4 +158,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startAutoPlay();
+    // Other News Horizontal Scroll
+    const otherNewsGrid = document.querySelector('.other-news-grid');
+    const otherNewsPrev = document.querySelector('.other-news-wrapper .nav-btn.prev');
+    const otherNewsNext = document.querySelector('.other-news-wrapper .nav-btn.next');
+
+    if (otherNewsGrid && otherNewsPrev && otherNewsNext) {
+        const scrollAmount = 300;
+        const dotsContainer = document.getElementById('other-news-dots');
+
+        const updateDots = () => {
+            if (!dotsContainer) return;
+
+            const totalWidth = otherNewsGrid.scrollWidth;
+            const visibleWidth = otherNewsGrid.clientWidth;
+            const maxScroll = totalWidth - visibleWidth;
+
+            // Calculate how many "pages" or "steps" there are
+            // We'll use the visible width as a page unit
+            const numDots = Math.max(1, Math.ceil(totalWidth / visibleWidth));
+
+            // Only recreate dots if count changed
+            if (dotsContainer.children.length !== numDots) {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < numDots; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'dot';
+                    dotsContainer.appendChild(dot);
+                }
+            }
+
+            // Update active dot based on scroll ratio
+            let currentIndex = 0;
+            if (maxScroll > 0) {
+                currentIndex = Math.round((otherNewsGrid.scrollLeft / maxScroll) * (numDots - 1));
+            }
+
+            Array.from(dotsContainer.children).forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        };
+
+        otherNewsNext.addEventListener('click', () => {
+            otherNewsGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        });
+
+        otherNewsPrev.addEventListener('click', () => {
+            otherNewsGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        });
+
+        // Optional: Hide buttons if no overflow
+        const toggleButtons = () => {
+            otherNewsPrev.style.opacity = otherNewsGrid.scrollLeft <= 0 ? '0.3' : '1';
+            otherNewsPrev.style.pointerEvents = otherNewsGrid.scrollLeft <= 0 ? 'none' : 'auto';
+
+            const maxScroll = otherNewsGrid.scrollWidth - otherNewsGrid.clientWidth;
+            otherNewsNext.style.opacity = otherNewsGrid.scrollLeft >= maxScroll - 5 ? '0.3' : '1';
+            otherNewsNext.style.pointerEvents = otherNewsGrid.scrollLeft >= maxScroll - 5 ? 'none' : 'auto';
+
+            updateDots();
+        };
+
+        otherNewsGrid.addEventListener('scroll', toggleButtons);
+        window.addEventListener('resize', () => {
+            toggleButtons();
+            updateDots();
+        });
+
+        // Initial setup
+        setTimeout(() => {
+            updateDots();
+            toggleButtons();
+        }, 100);
+    }
 });

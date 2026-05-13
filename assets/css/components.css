@@ -560,7 +560,7 @@
         transform: translateX(-50%);
         width: 260px;
         /* Space for dots in the middle */
-        height: 44px;
+        height: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
