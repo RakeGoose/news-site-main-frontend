@@ -196,6 +196,8 @@
     /* IE 10+ */
     padding: 4px;
     margin: -4px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 4px;
 }
 
 .other-news-grid::-webkit-scrollbar {
@@ -204,9 +206,10 @@
 }
 
 .small-news-card {
-    flex: 0 0 280px;
+    flex: 0 0 calc((100% - 32px * 2) / 3);
     display: flex;
     flex-direction: column;
+    scroll-snap-align: start;
 }
 
 .small-img-wrapper {
@@ -299,7 +302,7 @@
     }
 
     .small-news-card {
-        flex: 0 0 260px;
+        flex: 0 0 calc((100% - 32px * 1) / 2);
     }
 }
 
@@ -313,7 +316,7 @@
     }
 
     .small-news-card {
-        flex: 0 0 240px;
+        flex: 0 0 100%;
     }
 }
 

@@ -41,6 +41,7 @@ $mockCommentsCount = [
     <link rel="stylesheet" href="/assets/css/layout.css">
     <link rel="stylesheet" href="/assets/css/components.css">
     <link rel="stylesheet" href="/assets/css/pages/home.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body class="page-home">
@@ -79,25 +80,12 @@ $mockCommentsCount = [
                 <input type="text" placeholder="Поиск по сайту">
             </div>
         </div>
-        <!-- <nav class="main-nav">
-            <div class="container nav-flex">
-                <ul class="nav-links">
-                    <li><a href="/index.php" class="active">Главная</a></li>
-                    <li><a href="/pages/politics.php" id="politics">Политика</a></li>
-                    <li><a href="/pages/analytics.php" id="analytics">Аналитика</a></li>
-                    <li><a href="/pages/world.php" id="world">Мировые новости</a></li>
-                    <li><a href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a></li>
-                    <li><a href="/pages/sport.php" id="sports">Спорт</a></li>
-                    <li><a href="/pages/feed.php" id="my_lenta">Моя лента</a></li>
-                </ul>
-            </div>
-        </nav> -->
 
         <div class="container padding_786">
                 <nav class="navbar navbar-toggleable-md navbar-light">
-                    <button class="navbar-toggler navbar-toggler-right mt-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="fa fa-bars">☰</span>
+                        <span class="fa-solid fa-bars"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
@@ -126,9 +114,6 @@ $mockCommentsCount = [
                     </div>
                 </nav>
             </div>
-
-
-
                 
             </header>
 
@@ -139,7 +124,7 @@ $mockCommentsCount = [
                         $carousel_news = array_slice($news_result, 0, 3);
                         foreach($carousel_news as $index => $item): 
                         ?>
-                        <div class="hero-item <?= $index === 0 ? 'active' : '' ?>">
+                        <a href="/pages/article.php?id=<?= $item['id'] ?>" class="hero-item <?= $index === 0 ? 'active' : '' ?>">
                             <div class="hero-content">
                                 <span class="hero-category"><?= htmlspecialchars($item['category_name']) ?></span>
                                 <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
@@ -162,7 +147,7 @@ $mockCommentsCount = [
                             <div class="hero-image-wrapper">
                                 <img src="/uploads/news/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="hero-img">
                             </div>
-                        </div>
+                        </a>
                         <?php endforeach; ?>
                         
                         <div class="carousel-nav">

@@ -554,14 +554,11 @@
     .carousel-nav {
         top: auto;
         bottom: -60px;
-        /* Same as dots */
         left: 50%;
         right: auto;
         transform: translateX(-50%);
         width: 260px;
-        /* Space for dots in the middle */
         height: 16px;
-        display: flex;
         justify-content: space-between;
         align-items: center;
         pointer-events: none;
@@ -631,16 +628,6 @@
 }
 
 @media (max-width: 1200px) {
-    .carousel-nav {
-        left: 0;
-        right: 0;
-        position: static;
-        transform: none;
-        margin-top: 32px;
-        justify-content: center;
-        gap: 20px;
-    }
-
     .hero-section {
         padding: 40px 0 120px;
         margin-bottom: -60px;

@@ -164,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const otherNewsNext = document.querySelector('.other-news-wrapper .nav-btn.next');
 
     if (otherNewsGrid && otherNewsPrev && otherNewsNext) {
-        const scrollAmount = 300;
         const dotsContainer = document.getElementById('other-news-dots');
 
         const updateDots = () => {
@@ -172,11 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const totalWidth = otherNewsGrid.scrollWidth;
             const visibleWidth = otherNewsGrid.clientWidth;
-            const maxScroll = totalWidth - visibleWidth;
-
-            // Calculate how many "pages" or "steps" there are
-            // We'll use the visible width as a page unit
-            const numDots = Math.max(1, Math.ceil(totalWidth / visibleWidth));
+            const gap = 32; // Matches CSS gap
+            
+            // Calculate how many items are visible
+            const itemWidth = otherNewsGrid.querySelector('.small-news-card')?.offsetWidth || 280;
+            const itemsPerPage = Math.round(visibleWidth / itemWidth);
+            
+            // Calculate total pages
+            const totalItems = otherNewsGrid.querySelectorAll('.small-news-card').length;
+            const numDots = Math.ceil(totalItems / itemsPerPage);
 
             // Only recreate dots if count changed
             if (dotsContainer.children.length !== numDots) {
@@ -188,11 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Update active dot based on scroll ratio
-            let currentIndex = 0;
-            if (maxScroll > 0) {
-                currentIndex = Math.round((otherNewsGrid.scrollLeft / maxScroll) * (numDots - 1));
-            }
+            // Update active dot based on scroll position
+            const currentIndex = Math.round(otherNewsGrid.scrollLeft / (visibleWidth + gap));
 
             Array.from(dotsContainer.children).forEach((dot, i) => {
                 dot.classList.toggle('active', i === currentIndex);
@@ -200,21 +200,24 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         otherNewsNext.addEventListener('click', () => {
-            otherNewsGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            const gap = 32;
+            otherNewsGrid.scrollBy({ left: otherNewsGrid.clientWidth + gap, behavior: 'smooth' });
         });
 
         otherNewsPrev.addEventListener('click', () => {
-            otherNewsGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            const gap = 32;
+            otherNewsGrid.scrollBy({ left: -(otherNewsGrid.clientWidth + gap), behavior: 'smooth' });
         });
 
         // Optional: Hide buttons if no overflow
         const toggleButtons = () => {
-            otherNewsPrev.style.opacity = otherNewsGrid.scrollLeft <= 0 ? '0.3' : '1';
-            otherNewsPrev.style.pointerEvents = otherNewsGrid.scrollLeft <= 0 ? 'none' : 'auto';
+            const tolerance = 10;
+            otherNewsPrev.style.opacity = otherNewsGrid.scrollLeft <= tolerance ? '0.3' : '1';
+            otherNewsPrev.style.pointerEvents = otherNewsGrid.scrollLeft <= tolerance ? 'none' : 'auto';
 
             const maxScroll = otherNewsGrid.scrollWidth - otherNewsGrid.clientWidth;
-            otherNewsNext.style.opacity = otherNewsGrid.scrollLeft >= maxScroll - 5 ? '0.3' : '1';
-            otherNewsNext.style.pointerEvents = otherNewsGrid.scrollLeft >= maxScroll - 5 ? 'none' : 'auto';
+            otherNewsNext.style.opacity = otherNewsGrid.scrollLeft >= maxScroll - tolerance ? '0.3' : '1';
+            otherNewsNext.style.pointerEvents = otherNewsGrid.scrollLeft >= maxScroll - tolerance ? 'none' : 'auto';
 
             updateDots();
         };

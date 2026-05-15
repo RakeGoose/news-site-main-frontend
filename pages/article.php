@@ -141,28 +141,28 @@ $comments = $mockComments[$news_id] ?? [];
 
         <div class="container padding_786">
             <nav class="navbar navbar-toggleable-md navbar-light">
-                <button class="navbar-toggler navbar-toggler-right mt-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="fa fa-bars"></span>
+                    <span class="fa-solid fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="/pages/index.php" id="home">Главная</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_slug'] === 'politics' ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
                         </li>
-                        <li class="nav-item active">
+                        <li class="nav-item <?= $article['category_slug'] === 'analytics' ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/analytics.php" id="analytics">Аналитика</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_slug'] === 'world' ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/world.php" id="world">Мировые новости</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_slug'] === 'showbiz' ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_slug'] === 'sport' ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/sport.php" id="sports">Спорт</a>
                         </li>
                         <li class="nav-item">
@@ -265,22 +265,26 @@ $comments = $mockComments[$news_id] ?? [];
         </div>
 
         <aside class="article-sidebar">
-            <div class="sidebar-box similar-materials">
+            <div class="sidebar-box side-news">
                 <h3 class="sidebar-title">Похожие материалы <span class="dot-accent"></span></h3>
-                <div class="similar-list">
-                    <?php foreach ($similar_articles as $sim): ?>
-                        <div class="similar-item">
-                            <div class="similar-info">
-                                <h4 class="similar-news-title">
-                                    <a href="/pages/article.php?id=<?= $sim['id'] ?>"><?= htmlspecialchars($sim['title']) ?></a>
-                                </h4>
-                                <span class="similar-date"><?= date('d.m.Y, H:i', strtotime($sim['created_at'])) ?></span>
+                <div class="side-news-list">
+                    <?php if (!empty($similar_articles)): ?>
+                        <?php foreach ($similar_articles as $sim): ?>
+                            <div class="side-news-item">
+                                <a href="/pages/article.php?id=<?= $sim['id'] ?>" class="side-news-link">
+                                    <div class="side-news-content">
+                                        <p class="side-news-title"><?= htmlspecialchars($sim['title']) ?></p>
+                                        <span class="side-news-date"><?= date('d.m.Y, H:i', strtotime($sim['created_at'])) ?></span>
+                                    </div>
+                                    <?php if ($sim['image']): ?>
+                                        <img src="/uploads/news/<?= htmlspecialchars($sim['image']) ?>" class="side-news-thumb">
+                                    <?php endif; ?>
+                                </a>
                             </div>
-                            <?php if ($sim['image']): ?>
-                                <img src="/uploads/news/<?= htmlspecialchars($sim['image']) ?>" class="similar-thumb">
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="no-data">Похожих новостей нет</p>
+                    <?php endif; ?>
                 </div>
                 <a href="/pages/index.php" class="view-all-link">Все материалы <i class="fas fa-arrow-right"></i></a>
             </div>
