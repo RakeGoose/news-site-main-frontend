@@ -153,6 +153,10 @@ $mockCommentsCount = [
                                         <i class="far fa-eye"></i>
                                         <?= $featured['views'] ?>
                                     </span>
+                                    <span>
+                                        <i class="far fa-comment"></i>
+                                        <?= $featured['comments'] ?>
+                                        </span>
                                 </div>
 
                             </div>

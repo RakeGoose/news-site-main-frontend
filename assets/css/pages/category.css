@@ -46,6 +46,10 @@
     gap: 0;
 }
 
+.featured-news-link:hover {
+    color: var(--color-accent);
+}
+
 .featured-news-image {
     width: 100%;
     height: 170px;
@@ -73,6 +77,7 @@
     font-size: 19px;
     line-height: 1.25;
     font-weight: 900;
+    transition: color 0.2s ease;
 }
 
 .featured-news-excerpt {
@@ -108,6 +113,10 @@
     align-items: center;
 }
 
+.category-news-link:hover {
+    color: var(--color-accent);
+}
+
 .category-news-thumb {
     width: 130px;
     height: 64px;
@@ -120,6 +129,7 @@
     font-size: 16px;
     line-height: 1.25;
     font-weight: 800;
+    transition: color 0.2s ease;
 }
 
 .category-sidebar {

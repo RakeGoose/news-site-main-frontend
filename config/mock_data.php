@@ -22,6 +22,7 @@ $mockNews = [
         'author_name' => 'Алихан Сейсенов',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 2,
@@ -37,6 +38,7 @@ $mockNews = [
         'author_name' => 'Чарли Чапман',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 3,
@@ -52,6 +54,7 @@ $mockNews = [
         'author_name' => 'Боб Стоун',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 4,
@@ -67,6 +70,7 @@ $mockNews = [
         'author_name' => 'Adilet Zhaksylyk',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 5,
@@ -82,6 +86,7 @@ $mockNews = [
         'author_name' => 'Nice Tits',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 6,
@@ -97,6 +102,7 @@ $mockNews = [
         'author_name' => 'Nice Tits',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 7,
@@ -112,6 +118,7 @@ $mockNews = [
         'author_name' => 'Nice Tits',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 8,
@@ -127,6 +134,7 @@ $mockNews = [
         'author_name' => 'Nice Tits',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 9,
@@ -142,6 +150,7 @@ $mockNews = [
         'author_name' => 'Мария Ким',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 10,
@@ -157,6 +166,7 @@ $mockNews = [
         'author_name' => 'Рустем Ахметов',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 11,
@@ -172,6 +182,7 @@ $mockNews = [
         'author_name' => 'Дана Омарова',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
     [
         'id' => 12,
@@ -187,5 +198,6 @@ $mockNews = [
         'author_name' => 'Ерасыл Нурлан',
         'status' => 'approved',
         'language' => 'ru',
+        'comments' => 5,
     ],
 ];
