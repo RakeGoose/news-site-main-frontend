@@ -76,6 +76,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Active Navigation Highlighting
     const handleActiveNav = () => {
         const currentPath = window.location.pathname;
+
+        // Skip dynamic highlighting on article page to let PHP logic work
+        if (currentPath.includes('article.php')) return;
+
         const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
 
         navLinks.forEach(link => {
