@@ -116,7 +116,7 @@ $mockCommentsCount = [
             </div>
                 
             </header>
-
+                    
             <section class="hero-section">
                 <div class="container">
                     <div class="hero-carousel">
@@ -130,16 +130,13 @@ $mockCommentsCount = [
                                 <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
                                 <p class="hero-excerpt"><?= mb_strimwidth(strip_tags($item['content']), 0, 200, "...") ?></p>
                                 <div class="hero-meta">
-                                    <span class="hero-meta-item hero-date"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
-                                    <span class="hero-meta-item hero-views">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                                        stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                                        <circle cx="12" cy="12" r="3"/></svg>
+                                    <span class="hero-date"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
+                                    <span class="hero-views">
+                                        <i class="far fa-eye"></i>
                                         <?= $item['views'] ?>
                                     </span>
-                                    <span class="hero-meta-item hero-comments">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                        stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    <span class="hero-comments">
+                                        <i class="far fa-comment"></i>
                                         <?= $mockCommentsCount[$item['id']] ?? 0 ?>
                                     </span>
                                 </div>
@@ -215,24 +212,13 @@ $mockCommentsCount = [
                                     <div class="footer-left">
                                         <span class="meta-item"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
                                         <span class="meta-item">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                            <i class="far fa-eye"></i>
                                             <?= $item['views'] ?>
                                         </span>
                                         <span class="meta-item">
-                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                            <i class="far fa-comment"></i>
                                             <?= $mockCommentsCount[$item['id']] ?? 0 ?>
                                         </span>
-                                    </div>
-                                    <div class="footer-right">
-                                        <button class="bookmark-btn" aria-label="Save">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" 
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
