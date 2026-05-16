@@ -100,18 +100,6 @@
     opacity: 0.6;
 }
 
-.bookmark-btn {
-    background: transparent;
-    border: none;
-    color: #ccc;
-    padding: 8px;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.bookmark-btn:hover {
-    color: var(--color-accent);
-}
 
 /* Other News Section - Full Width Box */
 .other-news-wrapper {
@@ -121,6 +109,7 @@
     background: #ffffff;
     border-top: 1px solid var(--color-border);
     border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
 }
 
 .other-news-section-full {
