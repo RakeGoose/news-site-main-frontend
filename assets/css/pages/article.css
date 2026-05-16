@@ -233,6 +233,13 @@
     color: #009688;
     font-weight: 700;
     font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: #00796b;
+    text-decoration: underline;
+    transform: translateX(4px);
 }
 
 @media (max-width: 1100px) {

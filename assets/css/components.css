@@ -219,6 +219,12 @@
 
 .int-count {
     font-size: 14px;
+    transition: opacity 0.2s ease;
+}
+
+.view-all-link:hover {
+    opacity: 0.8;
+    text-decoration: underline;
 }
 
 .news-date-right {
@@ -272,6 +278,11 @@
     line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    transition: color 0.2s ease;
+}
+
+.side-news-link:hover .side-news-title {
+    color: var(--color-accent);
 }
 
 .side-news-thumb {

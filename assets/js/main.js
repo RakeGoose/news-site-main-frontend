@@ -72,6 +72,32 @@ document.addEventListener('DOMContentLoaded', () => {
             collapse.classList.toggle('show');
         });
     }
+
+    // Active Navigation Highlighting
+    const handleActiveNav = () => {
+        const currentPath = window.location.pathname;
+        const navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+        navLinks.forEach(link => {
+            const parent = link.closest('.nav-item');
+            if (!parent) return;
+
+            parent.classList.remove('active');
+
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            // Check if current path matches href or ends with it
+            const isHome = href === '/pages/index.php' || href === '/';
+            const isMatch = currentPath === href || currentPath.endsWith(href);
+
+            if (isMatch) {
+                parent.classList.add('active');
+            }
+        });
+    };
+
+    handleActiveNav();
 });
 
 // Hero Carousel Logic
@@ -172,11 +198,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalWidth = otherNewsGrid.scrollWidth;
             const visibleWidth = otherNewsGrid.clientWidth;
             const gap = 32; // Matches CSS gap
-            
+
             // Calculate how many items are visible
             const itemWidth = otherNewsGrid.querySelector('.small-news-card')?.offsetWidth || 280;
             const itemsPerPage = Math.round(visibleWidth / itemWidth);
-            
+
             // Calculate total pages
             const totalItems = otherNewsGrid.querySelectorAll('.small-news-card').length;
             const numDots = Math.ceil(totalItems / itemsPerPage);

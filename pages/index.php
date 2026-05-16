@@ -90,7 +90,7 @@ $mockCommentsCount = [
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active">
-                                <a class="nav-link" id="home">Главная</a>
+                                <a class="nav-link" href="/pages/index.php" id="home">Главная</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
