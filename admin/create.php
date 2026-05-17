@@ -40,9 +40,9 @@ $categories = $conn->query("SELECT id, name FROM categories");
                             <span class="lang-arrow">▼</span>
                         </button>
                         <div class="lang-list">
-                            <a href="#kz" class="lang-item">kaz</a>
-                            <a href="#ru" class="lang-item">rus</a>
-                            <a href="#en" class="lang-item">eng</a>
+                            <a href="#kz" class="lang-item">KZ</a>
+                            <a href="#ru" class="lang-item">RU</a>
+                            <a href="#en" class="lang-item">EN</a>
                         </div>
                     </div>
                 </div>

@@ -159,9 +159,9 @@
             </div>
             <div class="header-center">
                 <div class="lang-switcher">
-                    <a href="#kz" class="lang-item">KAZ</a>
-                    <a href="#ru" class="lang-item">RUS</a>
-                    <a href="#en" class="lang-item">ENG</a>
+                    <a href="#kz" class="lang-item">KZ</a>
+                    <a href="#ru" class="lang-item">RU</a>
+                    <a href="#en" class="lang-item">EN</a>
                 </div>
             </div>
             <div class="header-right">
