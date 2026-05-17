@@ -3,7 +3,6 @@ session_start();
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
 $news_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 $lang = $_SESSION['lang'] ?? 'ru';
@@ -13,80 +12,62 @@ if ($news_id <= 0) {
     exit;
 }
 
-$article = null;
+// ── Fetch the article from the real DB ──────────────────────────────────────
+$sql = "SELECT n.*, t.title, t.content,
+               c.name AS category_name,
+               COALESCE(u.name, 'Редакция') AS author_name
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id AND t.language = ?
+        LEFT JOIN users u ON n.author_id = u.id
+        WHERE n.id = ? AND n.status = 'approved'
+        LIMIT 1";
 
-foreach ($mockNews as $news) {
-    if (
-        (int)$news['id'] === $news_id
-        && ($news['language'] ?? 'ru') === $lang
-        && ($news['status'] ?? '') === 'approved'
-    ) {
-        $article = $news;
-        break;
-    }
-}
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("si", $lang, $news_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$article = $result->fetch_assoc();
 
 if (!$article) {
     die("Статья не найдена или еще не одобрена.");
 }
 
-// Get similar articles (excluding current one)
-$similar_articles = array_values(array_filter($mockNews, function ($news) use ($lang, $news_id) {
-    return ($news['status'] ?? '') === 'approved'
-        && ($news['language'] ?? 'ru') === $lang
-        && (int)$news['id'] !== $news_id;
-}));
-$similar_articles = array_slice($similar_articles, 0, 5);
+// ── Increment view count in DB ───────────────────────────────────────────────
+$conn->query("UPDATE news SET views = views + 1 WHERE id = $news_id");
+$article['views'] = (int)$article['views'] + 1;
 
-$article['views'] = ($article['views'] ?? 0) + 1;
+// ── Fetch real comments ──────────────────────────────────────────────────────
+$comments_sql = "SELECT u.name, cm.content, cm.created_at
+                 FROM comments cm
+                 LEFT JOIN users u ON cm.user_id = u.id
+                 WHERE cm.news_id = ?
+                 ORDER BY cm.created_at ASC";
+$cstmt = $conn->prepare($comments_sql);
+$cstmt->bind_param("i", $news_id);
+$cstmt->execute();
+$comments_result = $cstmt->get_result();
+$comments = [];
+while ($c = $comments_result->fetch_assoc()) {
+    $comments[] = $c;
+}
 
-$mockComments = [
-    1 => [
-        [
-            'name' => 'Мария Ким',
-            'content' => 'Хороший материал, удобно читать.',
-            'created_at' => '2026-05-09 13:20:00',
-        ],
-        [
-            'name' => 'Рустем Ахметов',
-            'content' => 'Нужно добавить больше деталей по теме.',
-            'created_at' => '2026-05-09 14:05:00',
-        ],
-        [
-            'name' => 'Алихан Сейсенов',
-            'content' => 'Интересно, как это повлияет на рынок в долгосрочной перспективе.',
-            'created_at' => '2026-05-09 15:30:00',
-        ],
-        [
-            'name' => 'Ерасыл Нурлан',
-            'content' => 'Отличная статья, ждем продолжения!',
-            'created_at' => '2026-05-09 16:15:00',
-        ],
-    ],
-    2 => [
-        [
-            'name' => 'Дана Омарова',
-            'content' => 'Интересная спортивная новость.',
-            'created_at' => '2026-05-08 19:00:00',
-        ],
-        [
-            'name' => 'Мария Ким',
-            'content' => 'Будем следить за развитием событий.',
-            'created_at' => '2026-05-08 20:30:00',
-        ],
-    ],
-    3 => [
-        [ 'name' => 'Рустем Ахметов', 'content' => 'Мировые новости всегда актуальны.', 'created_at' => '2026-05-07 10:00:00' ],
-        [ 'name' => 'Дана Омарова', 'content' => 'Хороший обзор.', 'created_at' => '2026-05-07 11:30:00' ],
-        [ 'name' => 'Алихан Сейсенов', 'content' => 'Спасибо за информацию.', 'created_at' => '2026-05-07 12:45:00' ],
-        [ 'name' => 'Ерасыл Нурлан', 'content' => 'Важное событие.', 'created_at' => '2026-05-07 14:10:00' ],
-        [ 'name' => 'Мария Ким', 'content' => 'Интересно.', 'created_at' => '2026-05-07 15:20:00' ],
-        [ 'name' => 'Даурен Бек', 'content' => 'Ждем подробностей.', 'created_at' => '2026-05-07 16:40:00' ],
-        [ 'name' => 'Асель Мурат', 'content' => 'Следим за новостями.', 'created_at' => '2026-05-07 17:55:00' ],
-    ],
-];
+// ── Fetch similar articles (same category, excluding current) ────────────────
+$sim_sql = "SELECT n.id, n.image, n.created_at, t.title
+            FROM news n
+            JOIN news_translations t ON n.id = t.news_id AND t.language = ?
+            WHERE n.category_id = ? AND n.status = 'approved' AND n.id != ?
+            ORDER BY n.created_at DESC
+            LIMIT 5";
+$sstmt = $conn->prepare($sim_sql);
+$sstmt->bind_param("sii", $lang, $article['category_id'], $news_id);
+$sstmt->execute();
+$sim_result = $sstmt->get_result();
+$similar_articles = [];
+while ($s = $sim_result->fetch_assoc()) {
+    $similar_articles[] = $s;
+}
 
-$comments = $mockComments[$news_id] ?? [];
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -150,19 +131,19 @@ $comments = $mockComments[$news_id] ?? [];
                         <li class="nav-item">
                             <a class="nav-link" href="/pages/index.php" id="home">Главная</a>
                         </li>
-                        <li class="nav-item <?= $article['category_slug'] === 'politics' ? 'active' : '' ?>">
+                        <li class="nav-item">
                             <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
                         </li>
-                        <li class="nav-item <?= $article['category_slug'] === 'analytics' ? 'active' : '' ?>">
+                        <li class="nav-item">
                             <a class="nav-link" href="/pages/analytics.php" id="analytics">Аналитика</a>
                         </li>
-                        <li class="nav-item <?= $article['category_slug'] === 'world' ? 'active' : '' ?>">
+                        <li class="nav-item">
                             <a class="nav-link" href="/pages/world.php" id="world">Мировые новости</a>
                         </li>
-                        <li class="nav-item <?= $article['category_slug'] === 'showbiz' ? 'active' : '' ?>">
+                        <li class="nav-item">
                             <a class="nav-link" href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a>
                         </li>
-                        <li class="nav-item <?= $article['category_slug'] === 'sport' ? 'active' : '' ?>">
+                        <li class="nav-item">
                             <a class="nav-link" href="/pages/sport.php" id="sports">Спорт</a>
                         </li>
                         <li class="nav-item">
@@ -190,7 +171,7 @@ $comments = $mockComments[$news_id] ?? [];
 
             <?php if ($article['image']): ?>
                 <div class="article-img-wrapper">
-                    <img src="/uploads/news/<?= htmlspecialchars($article['image']) ?>" alt="Main Photo" class="article-main-img">
+                    <img src="<?= htmlspecialchars($article['image']) ?>" alt="Main Photo" class="article-main-img">
                 </div>
             <?php endif; ?>
 
@@ -226,21 +207,16 @@ $comments = $mockComments[$news_id] ?? [];
                 
                 <div class="comment-form">
                     <?php if (isset($_SESSION['user'])): ?>
-                        <form action="#" method="POST" onsubmit="alert('Комментарии временно отключены: сайт работает без базы данных.'); return false;">
+                        <form action="/actions/news/comment.php" method="POST">
+                            <input type="hidden" name="news_id" value="<?= $news_id ?>">
                             <textarea name="comment_text" placeholder="Напишите ваш комментарий..." required></textarea>
                             <div class="comment-form-footer">
                                 <button type="submit" class="btn-submit">Отправить</button>
-                                <?php if (count($comments) === 0): ?>
-                                    <span class="no-comments-msg">Пока нет комментариев.</span>
-                                <?php endif; ?>
                             </div>
                         </form>
                     <?php else: ?>
                         <div class="login-to-comment">
                             Чтобы оставить комментарий, &nbsp; <a href="/auth/login.html">войдите</a>.
-                            <?php if (count($comments) === 0): ?>
-                                <span class="no-comments-msg">Пока нет комментариев.</span>
-                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
                 </div>
