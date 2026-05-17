@@ -55,7 +55,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
 
         <div class="container header-search-row">
             <div class="search-bar">
-                <input type="text" placeholder="Поиск по сайту">
+                <input type="text" class="search-input" placeholder="Поиск по сайту">
             </div>
         </div>
 
