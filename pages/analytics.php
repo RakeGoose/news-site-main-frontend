@@ -48,7 +48,9 @@ while ($row = $query_result->fetch_assoc()) {
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -121,8 +123,8 @@ while ($row = $query_result->fetch_assoc()) {
             <div class="category-main">
 
                 <div class="category-heading">
-                    <h1>Аналитика</h1>
-                    <p>Глубокий анализ событий, тенденций и процессов в Казахстане и мире.</p>
+                    <h1 class="cat-2">Аналитика</h1>
+                    <p class="cat-desc-2">Глубокий анализ событий, тенденций и процессов в Казахстане и мире.</p>
                 </div>
 
                 <?php if (!empty($result)): ?>
@@ -138,7 +140,7 @@ while ($row = $query_result->fetch_assoc()) {
                                 alt="news">
 
                             <div class="featured-news-content">
-                                <span class="featured-news-category">Аналитика</span>
+                                <span class="featured-news-category cat-2">Аналитика</span>
 
                                 <h2 class="featured-news-title">
                                     <?= htmlspecialchars($featured['title']) ?>
@@ -150,7 +152,6 @@ while ($row = $query_result->fetch_assoc()) {
 
                                 <div class="featured-news-meta">
                                     <span>
-                                        <i class="far fa-calendar-alt"></i>
                                         <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                     </span>
 
@@ -182,7 +183,7 @@ while ($row = $query_result->fetch_assoc()) {
 
                                     <div class="category-news-info">
 
-                                        <span class="category-news-label">Аналитика</span>
+                                        <span class="category-news-label cat-2">Аналитика</span>
 
                                         <h3 class="category-news-title">
                                             <?= htmlspecialchars($row['title']) ?>
@@ -190,7 +191,6 @@ while ($row = $query_result->fetch_assoc()) {
 
                                         <div class="category-news-meta">
                                             <span>
-                                                <i class="far fa-calendar-alt"></i>
                                                 <?= date('d.m.Y', strtotime($row['created_at'])) ?>
                                             </span>
 
@@ -222,8 +222,8 @@ while ($row = $query_result->fetch_assoc()) {
             <aside class="category-sidebar">
 
                 <div class="sidebar-card">
-                    <h3 class="sidebar-card-title">
-                        Авторы в аналитике
+                    <h3 class="sidebar-card-title sidebar-authors-title">
+                        Авторы
                     </h3>
 
                     <div class="sidebar-authors">

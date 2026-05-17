@@ -49,7 +49,9 @@ while ($row = $query_result->fetch_assoc()) {
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -120,8 +122,8 @@ while ($row = $query_result->fetch_assoc()) {
         <div class="container category-container">
             <div class="category-main">
                 <div class="category-heading">
-                    <h1>Мировые новости</h1>
-                    <p>Главные международные события, политика, экономика и новости со всего мира.</p>
+                    <h1 class="cat-3">Мировые новости</h1>
+                    <p class="cat-desc-3">Главные международные события, политика, экономика и новости со всего мира.</p>
                 </div>
                 <?php if (!empty($result)): ?>
                     <?php $featured = $result[0]; ?>
@@ -132,7 +134,7 @@ while ($row = $query_result->fetch_assoc()) {
                             class="featured-news-image"
                             alt="news">
                             <div class="featured-news-content">
-                                <span class="featured-news-category">
+                                <span class="featured-news-category cat-3">
                                     Мировые новости
                                 </span>
                                 <h2 class="featured-news-title">
@@ -143,7 +145,6 @@ while ($row = $query_result->fetch_assoc()) {
                                 </p>
                                 <div class="featured-news-meta">
                                     <span>
-                                        <i class="far fa-calendar-alt"></i>
                                         <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                     </span>
                                     <span>
@@ -170,7 +171,7 @@ while ($row = $query_result->fetch_assoc()) {
                                     class="category-news-thumb"
                                     alt="news">
                                     <div class="category-news-info">
-                                        <span class="category-news-label">
+                                        <span class="category-news-label cat-3">
                                             Мировые новости
                                         </span>
                                         <h3 class="category-news-title">
@@ -178,7 +179,6 @@ while ($row = $query_result->fetch_assoc()) {
                                         </h3>
                                         <div class="category-news-meta">
                                             <span>
-                                                <i class="far fa-calendar-alt"></i>
                                                 <?= date('d.m.Y', strtotime($row['created_at'])) ?>
                                             </span>
                                             <span>
@@ -197,14 +197,14 @@ while ($row = $query_result->fetch_assoc()) {
                     </div>
                 <?php else: ?>
                     <div class="no-news">
-                        Пока нет мировых новостей на выбранном языке.
+                        Новостей пока нет.
                     </div>
                 <?php endif; ?>
             </div>
             <aside class="category-sidebar">
                 <div class="sidebar-card">
-                    <h3 class="sidebar-card-title">
-                        Авторы в мире
+                    <h3 class="sidebar-card-title sidebar-authors-title">
+                        Авторы
                     </h3>
                     <div class="sidebar-authors">
                         <div class="sidebar-author">

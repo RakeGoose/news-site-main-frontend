@@ -265,10 +265,10 @@ while ($s = $sim_result->fetch_assoc()) {
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="no-data no-similar-news">Похожих новостей нет</p>
+                        <p class="no-data">Похожих новостей нет</p>
                     <?php endif; ?>
                 </div>
-                <a href="/pages/index.php" class="view-all-link"><span class="all-materials">Все материалы</span> <i class="fas fa-arrow-right"></i></a>
+                <a href="/pages/index.php" class="view-all-link">Все материалы <i class="fas fa-arrow-right"></i></a>
             </div>
         </aside>
     </main>

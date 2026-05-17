@@ -28,7 +28,7 @@ const langArr = {
     "my_lenta": { "ru": "Моя лента", "en": "My feed", "kz": "Менің лентам" },
     "analytics": { "ru": "Аналитика", "en": "Analytics", "kz": "Аналитика" },
     "world": { "ru": "Мировые новости", "en": "World news", "kz": "Әлем жаңалықтары" },
-    "showbiz": { "ru": "Шоу-бизнес", "en": "Showbiz", "kz": "Шоу-бизнес" },
+    "showbiz": { "ru": "Шоу-бизнес", "en": "Entertainment", "kz": "Шоу-бизнес" },
     "sports": { "ru": "Спорт", "en": "Sports", "kz": "Спорт" },
     "about_us": { "ru": "О нас", "en": "About us", "kz": "Біз туралы" },
     "contact": { "ru": "Контакты", "en": "Contact", "kz": "Байланыс" },
@@ -407,7 +407,7 @@ const langArr = {
         "ru": "Мировые новости", "en": "World news", "kz": "Әлем жаңалықтары"
     },
     "cat-4": {
-        "ru": "Шоу-бизнес", "en": "Showbiz", "kz": "Шоу-бизнес"
+        "ru": "Шоу-бизнес", "en": "Entertainment", "kz": "Шоу-бизнес"
     },
     "cat-5": {
         "ru": "Спорт", "en": "Sports", "kz": "Спорт"
@@ -417,5 +417,23 @@ const langArr = {
     },
     "no-similar-news": {
         "ru": "Похожих новостей нет", "en": "No similar news", "kz": "Ұқсас жаңалықтар жоқ"
-    }
+    },
+    "cat-desc-1": {
+        "ru": "Главные политические события, решения и заявления в Казахстане и мире.", "en": "The main political events, decisions and statements in Kazakhstan and the world.", "kz": "Қазақстандағы және әлемдегі басты саяси оқиғалар, шешімдер мен мәлімдемелер."
+    },
+    "cat-desc-2": {
+        "ru": "Глубокий анализ событий, тенденций и процессов в Казахстане и мире.", "en": "Deep analysis of events, trends, and processes in Kazakhstan and the world.", "kz": "Қазақстандағы және әлемдегі оқиғалар, тенденциялар мен процестерді терең талдау."
+    },
+    "cat-desc-3": {
+        "ru": "Главные международные события, политика, экономика и новости со всего мира.", "en": "Major international events, politics, economics, and news from around the world.", "kz": "Басты халықаралық оқиғалар, саясат, экономика және бүкіл әлемдегі жаңалықтар."
+    },
+    "cat-desc-4": {
+        "ru": "Новости культуры, знаменитостей, музыки, кино и развлекательной индустрии.", "en": "News from culture, celebrities, music, movies, and the entertainment industry.", "kz": "Мәдениет, танымал адамдар, музыка, кино және ойын-сауық индустриясының жаңалықтары."
+    },
+    "cat-desc-5": {
+        "ru": "Главные спортивные события, результаты матчей, трансферы и аналитика.", "en": "Major sporting events, match results, transfers, and analytics.", "kz": "Басты спорттық оқиғалар, матч нәтижелері, трансферлер және аналитика."
+    },
+    "sidebar-authors-title": {
+        "ru": "Авторы", "en": "Authors", "kz": "Авторлар"
+    },
 };

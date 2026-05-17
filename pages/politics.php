@@ -48,7 +48,9 @@ while ($row = $query_result->fetch_assoc()) {
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -119,8 +121,8 @@ while ($row = $query_result->fetch_assoc()) {
         <div class="container category-container">
             <div class="category-main">
                 <div class="category-heading">
-                    <h1>Политика</h1>
-                    <p>Главные политические события, решения и заявления в Казахстане и мире.</p>
+                    <h1 class="cat-1">Политика</h1>
+                    <p class="cat-desc-1">Главные политические события, решения и заявления в Казахстане и мире.</p>
                 </div>
                 <?php if (!empty($result)): ?>
                     <?php $featured = $result[0]; ?>
@@ -131,7 +133,7 @@ while ($row = $query_result->fetch_assoc()) {
                             class="featured-news-image"
                             alt="news">
                             <div class="featured-news-content">
-                                <span class="featured-news-category">Политика</span>
+                                <span class="featured-news-category cat-1">Политика</span>
                                 <h2 class="featured-news-title">
                                     <?= htmlspecialchars($featured['title']) ?>
                                 </h2>
@@ -140,7 +142,6 @@ while ($row = $query_result->fetch_assoc()) {
                                 </p>
                                 <div class="featured-news-meta">
                                 <span>
-                                    <i class="far fa-calendar-alt"></i>
                                     <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                 </span>
                                 <span>
@@ -165,13 +166,12 @@ while ($row = $query_result->fetch_assoc()) {
                                     class="category-news-thumb"
                                     alt="news">
                                     <div class="category-news-info">
-                                        <span class="category-news-label">Политика</span>
+                                        <span class="category-news-label cat-1">Политика</span>
                                         <h3 class="category-news-title">
                                             <?= htmlspecialchars($row['title']) ?>
                                         </h3>
                                         <div class="category-news-meta">
                                         <span>
-                                            <i class="far fa-calendar-alt"></i>
                                             <?= date('d.m.Y', strtotime($row['created_at'])) ?>
                                         </span>
                                         <span>
@@ -192,14 +192,14 @@ while ($row = $query_result->fetch_assoc()) {
             </div>
             <aside class="category-sidebar">
                 <div class="sidebar-card">
-                    <h3 class="sidebar-card-title">
+                    <h3 class="sidebar-card-title sidebar-authors-title">
                         Авторы
                     </h3>
                     <div class="sidebar-authors">
                         <div class="sidebar-author">
                             <img src="https://i.pravatar.cc/60?img=4" alt="">
                             <div>
-                                <strong>Алихан Сейсенов</strong>
+                                <strong>Писькин Залупкин</strong>
                                 <span>24 статьи</span>
                             </div>
                         </div>
