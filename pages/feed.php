@@ -42,7 +42,7 @@ foreach ($result as $row) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="unit">Моя лента | Logotip news</title>
+    <title id="title_my_lenta">Моя лента | Logotip news</title>
     <link rel="stylesheet" href="/assets/css/global.css">
     <link rel="stylesheet" href="/assets/css/layout.css">
     <link rel="stylesheet" href="/assets/css/components.css">
@@ -82,7 +82,7 @@ foreach ($result as $row) {
 
         <div class="container header-search-row">
             <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Поиск по сайту">
+                <input type="text" id="search-input" placeholder="Поиск по сайту">
             </div>
         </div>
 
@@ -128,7 +128,7 @@ foreach ($result as $row) {
                 <div class="feed-auth-box">
                     <h2 id="lenta_auth_title">Ваша персональная лента</h2>
                     <p id="lenta_auth_text">Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.</p>
-                    <a href="/auth/login.html" class="auth-btn-black" style="display: inline-block; margin-top: 15px;">Войти</a>
+                    <a href="/auth/login.html" class="auth-btn-black" id="login_to_feed" style="display: flex; justify-content: center; margin-top: 15px;">Войти</a>
                 </div>
             <?php else: ?>
                 <ul class="news-grid-list">
@@ -140,7 +140,7 @@ foreach ($result as $row) {
                             <li class="news-item-card">
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
                                     <?php if ($row['image']): ?>
-                                        <img src="<?= htmlspecialchars($row['image']) ?>"
+                                        <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
                                              class="news-item__img"
                                              loading="lazy">
                                 <?php endif; ?>
@@ -173,23 +173,55 @@ foreach ($result as $row) {
     </main>
 
     <footer class="main-footer">
-        <div class="container footer-content">
-            <div class="footer-legal">
-                <p id="certificate1">Свидетельство о постановке на учет №KZ05VFY00030397</p>
-                <p id="certificate2">выдано 22.12.2020</p>
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">LOGOTIP NEWS</div>
+                <div class="footer-legal-info">
+                    <p id="certificate1">Свидетельство о постановке на учет №KZ05VFY00030397</p>
+                    <p id="certificate2">Выдано 22.12.2020</p>
+                </div>
+                <div class="footer-socials">
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                        stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="#" class="social-link" aria-label="TikTok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                        stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                        <span>TikTok</span>
+                    </a>
+                </div>
             </div>
-            <div class="footer-nav-groups">
-                <div class="footer-col"><a href="/pages/about.php" id="about_us">Про нас</a><a href="#" id="redaction">Редакция</a></div>
-                <div class="footer-col"><a href="#" id="vacancy">Вакансии</a><a href="/pages/contacts.php" id="contact">Контакты</a></div>
-                <div class="footer-col"><a href="#" id="advertisement">Реклама</a><a href="#" id="support">Поддержка</a></div>
-                <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <div class="footer-col"><a href="/admin/admin.php" style="color: #009688; font-weight: bold;">Admin</a></div>
-                <?php endif; ?>
+            
+            <div class="footer-nav-section">
+                <h4 class="footer-title company">Компания</h4>
+                <nav class="footer-links">
+                    <a href="/pages/about.php" id="about_us">Про нас</a>
+                    <a href="#" id="redaction">Редакция</a>
+                    <a href="#" id="vacancy">Вакансии</a>
+                </nav>
             </div>
-            <div class="footer-socials">
-                <a href="#" class="social-icon">Instagram</a>
-                <a href="#" class="social-icon">TikTok</a>
+
+            <div class="footer-nav-section">
+                <h4 class="footer-title information">Информация</h4>
+                <nav class="footer-links">
+                    <a href="/pages/contacts.php" id="contact">Контакты</a>
+                    <a href="#" id="advertisement">Реклама</a>
+                    <a href="#" id="support">Поддержка</a>
+                </nav>
             </div>
+
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <div class="footer-nav-section">
+                <h4 class="footer-title">Админ-панель</h4>
+                <nav class="footer-links">
+                    <a href="/admin/admin.php" style="color: var(--color-accent); font-weight: bold;">Управление сайтом</a>
+                    <a href="/admin/admin_actions.php">Управление новостями</a>
+                </nav>
+            </div>
+            <?php endif; ?>
         </div>
     </footer>
     <script src="/assets/js/lang.js"></script>

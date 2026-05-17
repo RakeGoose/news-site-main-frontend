@@ -533,6 +533,31 @@ const langArr = {
         "en": "Click or drag the file here",
         "kz": "Файлды осы жерге басыңыз немесе сүйреп апарыңыз",
     },
+    "title_my_lenta": {
+        "ru": "Моя лента | Logotip news",
+        "en": "My feed | Logotip news",
+        "kz": "Менің лентам | Logotip news",
+    },
+    "lenta_auth_title": {
+        "ru": "Ваша персональная лента",
+        "en": "Your personal feed",
+        "kz": "Сіздің жеке лентаңыз",
+    },
+    "lenta_auth_text": {
+        "ru": "Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.",
+        "en": "Log in to see news curated specifically for you.",
+        "kz": "Арнайы сізге арналған жаңалықтарды көру үшін жүйеге кіріңіз.",
+    },
+    "login_to_feed": {
+        "ru": "Войти",
+        "en": "Log in",
+        "kz": "Кіру",
+    },
+    "no_news_found": {
+        "ru": "В вашей ленте пока пусто.",
+        "en": "Your feed is currently empty.",
+        "kz": "Сіздің лентаңыз әзірге бос.",
+    },
     "": {
         "ru": "",
         "en": "",
