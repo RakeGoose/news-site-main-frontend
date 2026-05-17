@@ -127,7 +127,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
                         <select name="category_id"
                                 class="news-input"
                                 required>
-                            <option value="">Выберите категорию</option>
+                            <option value="" class="category-input">Выберите категорию</option>
                             <?php while ($cat = $categories->fetch_assoc()): ?>
                                 <option value="<?= $cat['id'] ?>"><?= htmlspecialchars($cat['name']) ?></option>
                             <?php endwhile; ?>
@@ -148,11 +148,11 @@ $categories = $conn->query("SELECT id, name FROM categories");
                              class="lang-section <?= $lang == 'ru' ? 'active' : '' ?>">
                             <div class="input-group-news">
                                 <label class="news-label sn3">Заголовок (<?= strtoupper($lang) ?>)*</label>
-                                <input type="text" name="title_<?= $lang ?>" class="news-input" placeholder="Введите заголовок" required>
+                                <input type="text" name="title_<?= $lang ?>" class="news-input title-input" placeholder="Введите заголовок" required>
                             </div>
                             <div class="input-group-news">
                                 <label class="news-label sn4">Текст новости (<?= strtoupper($lang) ?>)... *</label>
-                                <textarea name="content_<?= $lang ?>" placeholder="Введите текст новости" required></textarea>
+                                <textarea name="content_<?= $lang ?>" class="text-input" placeholder="Введите текст новости" required></textarea>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -163,7 +163,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
                                 <input type="file" name="newsPhoto" id="newsPhoto" accept="image/*" hidden required>
                                 <div class="upload-placeholder">
                                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                                    <span id="uploadStatus">Нажмите или перетащите файл сюда</span>
+                                    <span id="uploadStatus" class="main-photo-input">Нажмите или перетащите файл сюда</span>
                                     <small>JPG, PNG до 3 MB</small>
                                 </div>
                             </label>
@@ -176,7 +176,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
                                 <input type="file" name="innerPhoto" id="innerPhoto" accept="image/*" hidden>
                                 <div class="upload-placeholder">
                                     <i class="fa-solid fa-cloud-arrow-up"></i>
-                                    <span id="innerUploadStatus">Нажмите или перетащите файл сюда</span>
+                                    <span id="innerUploadStatus" class="addition-photo-input">Нажмите или перетащите файл сюда</span>
                                     <small>JPG, PNG до 3 MB</small>
                                 </div>
                             </label>
