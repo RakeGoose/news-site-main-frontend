@@ -1,50 +1,35 @@
 <?php
-declare(strict_types=1);
-
+require_once __DIR__ . '/../config/db.php';
 session_start();
 
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../config/mock_data.php';
-
-header('Content-Type: application/json; charset=UTF-8');
-
 $lang = $_SESSION['lang'] ?? 'ru';
-$query = trim($_GET['q'] ?? '');
+$query = isset($_GET['q']) ? trim($_GET['q']) : '';
 
 if (mb_strlen($query) < 2) {
-    echo json_encode([], JSON_UNESCAPED_UNICODE);
+    echo json_encode([]);
     exit;
 }
 
-$results = [];
+$searchTerm = "%$query%";
+$sql = "SELECT n.id, t.title, n.image 
+        FROM news n 
+        JOIN news_translations t ON n.id = t.news_id 
+        WHERE n.status = 'approved' AND t.language = ? AND t.title LIKE ? 
+        LIMIT 5";
 
-foreach ($mockNews as $news) {
-    if (
-        ($news['status'] ?? '') !== 'approved'
-        || ($news['language'] ?? 'ru') !== $lang
-    ) {
-        continue;
-    }
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $lang, $searchTerm);
+$stmt->execute();
+$result = $stmt->get_result();
 
-    $title = $news['title'] ?? '';
-    $content = $news['content'] ?? '';
-
-    if (
-        mb_stripos($title, $query) !== false
-        || mb_stripos($content, $query) !== false
-    ) {
-        $results[] = [
-            'id' => $news['id'],
-            'title' => $title,
-            'image' => !empty($news['image'])
-                ? '/uploads/news/' . $news['image']
-                : null,
-        ];
-    }
-
-    if (count($results) >= 5) {
-        break;
-    }
+$news = [];
+while ($row = $result->fetch_assoc()) {
+    $news[] = [
+        'id' => $row['id'],
+        'title' => $row['title'],
+        'image' => $row['image'] ? $row['image'] . "?tr=w-50,h-50,cm-pad_resize" : null
+    ];
 }
 
-echo json_encode($results, JSON_UNESCAPED_UNICODE);
+header('Content-Type: application/json');
+echo json_encode($news);

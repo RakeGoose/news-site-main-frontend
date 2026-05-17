@@ -39,7 +39,9 @@
 }
 
 .lang-list .lang-item:hover {
-    background: var(--color-bg);
+    background-color: #0d0d0d;
+    color: #ffffff;
+    transition: 0.3s ease;
 }
 
 .lang-btn {
@@ -99,6 +101,9 @@
 .auth-btn-black:hover,
 .btn-suggest:hover {
     transform: translateY(-1px);
+    transition: 0.3s ease;
+    background-color: #0d0d0d;
+    color: #ffffff;
 }
 
 .main-layout {
