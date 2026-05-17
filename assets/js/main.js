@@ -6,8 +6,10 @@ document.querySelectorAll('.lang-item').forEach(link => {
         e.preventDefault();
         const newLang = this.getAttribute('href').replace('#', '');
         localStorage.setItem('lang', newLang);
-        // Добавляем параметр lang в URL для PHP и хеш для JS
-        window.location.href = window.location.pathname + "?lang=" + newLang + "#" + newLang;
+        // Сохраняем все текущие GET-параметры (например, id статьи) и обновляем/добавляем lang
+        const params = new URLSearchParams(window.location.search);
+        params.set('lang', newLang);
+        window.location.href = window.location.pathname + "?" + params.toString() + "#" + newLang;
     });
 });
 
