@@ -561,7 +561,7 @@ const langArr = {
     "admin-panel-title": {
         "ru": "Админ-панель",
         "en": "Admin panel",
-        "kz": "Әкімші тақтасы",
+        "kz": "Админ тақтасы",
     },
     "admin-site-mgmt": {
         "ru": "Управление сайтом",
