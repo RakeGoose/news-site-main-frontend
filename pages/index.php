@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/init_lang.php';
 
 $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content, c.name as category_name
+$sql = "SELECT n.id, n.image, n.views, n.created_at, n.category_id, t.title, t.content, c.name as category_name
         FROM news n
         JOIN categories c ON n.category_id = c.id
         JOIN news_translations t ON n.id = t.news_id
@@ -61,7 +61,9 @@ if ($authors_result && $authors_result->num_rows > 0) {
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -88,7 +90,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
 
         <div class="container header-search-row">
             <div class="search-bar">
-                <input type="text" placeholder="Поиск по сайту">
+                <input type="text" class="search-input" placeholder="Поиск по сайту">
             </div>
         </div>
 
@@ -138,7 +140,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
                         ?>
                         <a href="/pages/article.php?id=<?= $item['id'] ?>" class="hero-item <?= $index === 0 ? 'active' : '' ?>">
                             <div class="hero-content">
-                                <span class="hero-category"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <span class="hero-category cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                                 <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
                                 <p class="hero-excerpt"><?= mb_strimwidth(strip_tags($item['content']), 0, 200, "...") ?></p>
                                 <div class="hero-meta">
@@ -211,7 +213,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
                         <article class="featured-news-card">
                             <a href="/pages/article.php?id=<?= $item['id'] ?>" class="featured-img-wrapper">
                                 <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="featured-img">
-                                <span class="category-badge-overlay"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <span class="category-badge-overlay cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                             </a>
                             <div class="featured-content">
                                 <h2 class="featured-title">
@@ -275,7 +277,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
                 <div class="container">
                     <section class="other-news-section-full">
                         <div class="section-header">
-                            <h3 class="section-title">Другие новости</h3>
+                            <h3 class="section-title other-news">Другие новости</h3>
                             <div class="section-nav">
                                 <div class="section-dots" id="other-news-dots"></div>
                                 <button class="nav-btn prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -291,7 +293,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
                                 <article class="small-news-card">
                                     <a href="/pages/article.php?id=<?= $item['id'] ?>" class="small-img-wrapper">
                                         <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="small-img">
-                                        <span class="category-badge-small"><?= htmlspecialchars($item['category_name']) ?></span>
+                                        <span class="category-badge-small cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                                     </a>
                                     <div class="small-content">
                                         <h4 class="small-title">
@@ -331,7 +333,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
             </div>
             
             <div class="footer-nav-section">
-                <h4 class="footer-title">Компания</h4>
+                <h4 class="footer-title company">Компания</h4>
                 <nav class="footer-links">
                     <a href="/pages/about.php" id="about_us">Про нас</a>
                     <a href="#" id="redaction">Редакция</a>
@@ -340,7 +342,7 @@ if ($authors_result && $authors_result->num_rows > 0) {
             </div>
 
             <div class="footer-nav-section">
-                <h4 class="footer-title">Информация</h4>
+                <h4 class="footer-title information">Информация</h4>
                 <nav class="footer-links">
                     <a href="/pages/contacts.php" id="contact">Контакты</a>
                     <a href="#" id="advertisement">Реклама</a>

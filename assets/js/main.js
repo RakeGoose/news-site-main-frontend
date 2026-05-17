@@ -36,16 +36,16 @@ function changeLanguage() {
         }
     });
 
-    // 3. Перевод элементов по ID
+    // 3. Перевод элементов по ID и классам
     for (let key in langArr) {
-        let elem = document.getElementById(key);
-        if (elem) {
+        let elems = document.querySelectorAll('#' + key + ', .' + key);
+        elems.forEach(elem => {
             if (elem.tagName === 'INPUT' || elem.tagName === 'TEXTAREA') {
                 elem.placeholder = langArr[key][hash];
             } else {
                 elem.innerHTML = langArr[key][hash];
             }
-        }
+        });
     }
 
     // САМОЕ ВАЖНОЕ: Показываем страницу после перевода

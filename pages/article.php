@@ -89,7 +89,9 @@ while ($s = $sim_result->fetch_assoc()) {
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -116,7 +118,7 @@ while ($s = $sim_result->fetch_assoc()) {
 
         <div class="container header-search-row">
             <div class="search-bar">
-                <input type="text" placeholder="Поиск по сайту">
+                <input type="text" class="search-input" placeholder="Поиск по сайту">
             </div>
         </div>
 
@@ -157,10 +159,10 @@ while ($s = $sim_result->fetch_assoc()) {
 
     <main class="container article-layout">
         <div class="article-main-content">
-            <a href="javascript:history.back()" class="back-link"><i class="fas fa-arrow-left"></i> Назад</a>
+            <a href="javascript:history.back()" class="back-link back-btn"><i class="fas fa-arrow-left"></i> Назад</a>
 
             <header class="article-header">
-                <span class="article-category"><?= htmlspecialchars($article['category_name']) ?></span>
+                <span class="article-category cat-<?= $article['category_id'] ?>"><?= htmlspecialchars($article['category_name']) ?></span>
                 <h1 class="article-title"><?= htmlspecialchars($article['title']) ?></h1>
                 <div class="article-meta">
                     <span class="meta-item"><i class="far fa-user"></i> <?= htmlspecialchars($article['author_name']) ?></span>
@@ -203,46 +205,50 @@ while ($s = $sim_result->fetch_assoc()) {
             </div>
 
             <section id="comments" class="comments-section">
-                <h3 class="comments-title">Комментарии (<?= count($comments) ?>)</h3>
+                <h3 class="comments-title-wrap"><span class="comments-title">Комментарии</span> (<?= count($comments) ?>)</h3>
                 
                 <div class="comment-form">
                     <?php if (isset($_SESSION['user'])): ?>
                         <form action="/actions/news/comment.php" method="POST">
                             <input type="hidden" name="news_id" value="<?= $news_id ?>">
-                            <textarea name="comment_text" placeholder="Напишите ваш комментарий..." required></textarea>
+                            <textarea name="comment_text" class="comment-placeholder" placeholder="Оставьте свой комментарий..." required></textarea>
                             <div class="comment-form-footer">
-                                <button type="submit" class="btn-submit">Отправить</button>
+                                <button type="submit" class="btn-submit submit-comment">Отправить</button>
                             </div>
                         </form>
                     <?php else: ?>
-                        <div class="login-to-comment">
-                            Чтобы оставить комментарий, &nbsp; <a href="/auth/login.html">войдите</a>.
+                        <div class="login-to-comment-wrap" style="text-align: center; margin-bottom: 20px;">
+                            <a href="/auth/login.html" class="login-to-comment" style="color: var(--color-accent); font-weight: 500;">Войдите, чтобы оставить комментарий</a>
                         </div>
                     <?php endif; ?>
                 </div>
 
                 <div class="comments-list">
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="comment-item">
-                            <div class="comment-avatar">
-                                <i class="fas fa-user-circle"></i>
-                            </div>
-                            <div class="comment-content">
-                                <div class="comment-header">
-                                    <span class="comment-author"><?= htmlspecialchars($comment['name']) ?></span>
-                                    <span class="comment-date"><?= date('d.m.Y, H:i', strtotime($comment['created_at'])) ?></span>
+                    <?php if (empty($comments)): ?>
+                        <p class="no-comments" style="text-align: center; color: var(--color-text-muted); margin-top: 20px;">Пока нет комментариев. Будьте первым!</p>
+                    <?php else: ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="comment-item">
+                                <div class="comment-avatar">
+                                    <i class="fas fa-user-circle"></i>
                                 </div>
-                                <p class="comment-text"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-author"><?= htmlspecialchars($comment['name']) ?></span>
+                                        <span class="comment-date"><?= date('d.m.Y, H:i', strtotime($comment['created_at'])) ?></span>
+                                    </div>
+                                    <p class="comment-text"><?= nl2br(htmlspecialchars($comment['content'])) ?></p>
+                                </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </section>  
         </div>
 
         <aside class="article-sidebar">
             <div class="sidebar-box side-news">
-                <h3 class="sidebar-title">Похожие материалы <span class="dot-accent"></span></h3>
+                <h3 class="sidebar-title"><span class="similar-materials">Похожие материалы</span> <span class="dot-accent"></span></h3>
                 <div class="side-news-list">
                     <?php if (!empty($similar_articles)): ?>
                         <?php foreach ($similar_articles as $sim): ?>
@@ -259,10 +265,10 @@ while ($s = $sim_result->fetch_assoc()) {
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="no-data">Похожих новостей нет</p>
+                        <p class="no-data no-similar-news">Похожих новостей нет</p>
                     <?php endif; ?>
                 </div>
-                <a href="/pages/index.php" class="view-all-link">Все материалы <i class="fas fa-arrow-right"></i></a>
+                <a href="/pages/index.php" class="view-all-link"><span class="all-materials">Все материалы</span> <i class="fas fa-arrow-right"></i></a>
             </div>
         </aside>
     </main>
@@ -291,7 +297,7 @@ while ($s = $sim_result->fetch_assoc()) {
             </div>
             
             <div class="footer-nav-section">
-                <h4 class="footer-title">Компания</h4>
+                <h4 class="footer-title company">Компания</h4>
                 <nav class="footer-links">
                     <a href="/pages/about.php" id="about_us">Про нас</a>
                     <a href="#" id="redaction">Редакция</a>
@@ -300,7 +306,7 @@ while ($s = $sim_result->fetch_assoc()) {
             </div>
 
             <div class="footer-nav-section">
-                <h4 class="footer-title">Информация</h4>
+                <h4 class="footer-title information">Информация</h4>
                 <nav class="footer-links">
                     <a href="/pages/contacts.php" id="contact">Контакты</a>
                     <a href="#" id="advertisement">Реклама</a>
