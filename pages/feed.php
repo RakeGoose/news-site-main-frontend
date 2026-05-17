@@ -140,7 +140,7 @@ foreach ($result as $row) {
                             <li class="news-item-card">
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
                                     <?php if ($row['image']): ?>
-                                        <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
+                                        <img src="<?= htmlspecialchars($row['image']) ?>"
                                              class="news-item__img"
                                              loading="lazy">
                                 <?php endif; ?>
