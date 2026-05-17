@@ -503,10 +503,39 @@ const langArr = {
         "en": "English (EN)",
         "kz": "Ағылшын (EN)",
     },
+    "category-input": {
+        "ru": "Выберите категорию",
+        "en": "Select a category",
+        "kz": "Санатты таңдаңыз",
+    },
+    "title-input": {
+        "ru": "Введите заголовок",
+        "en": "Enter a title",
+        "kz": "Атауын енгізіңіз",
+    },
+    "text-input": {
+        "ru": "Введите текст новости",
+        "en": "Enter text of news",
+        "kz": "Жаңалық мәтінін енгізіңіз",
+    },
+    "main-photo-input": {
+        "ru": "Нажмите или перетащите файл сюда",
+        "en": "Click or drag the file here",
+        "kz": "Файлды осы жерге басыңыз немесе сүйреп апарыңыз",
+    },
+    "upload-placeholder small": {
+        "ru": "JPG, PNG до 3 MB",
+        "en": "JPG, PNG up to 3 MB",
+        "kz": "JPG, PNG 3 МБ дейін",
+    },
+    "addition-photo-input": {
+        "ru": "Нажмите или перетащите файл сюда",
+        "en": "Click or drag the file here",
+        "kz": "Файлды осы жерге басыңыз немесе сүйреп апарыңыз",
+    },
     "": {
         "ru": "",
         "en": "",
         "kz": "",
-    }
-
+    },
 };
