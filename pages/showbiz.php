@@ -1,28 +1,33 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = $_SESSION['lang'] ?? 'ru';
-$category_slug = 'showbiz';
+$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
+$category_name = 'Шоу-бизнес';
 
-$result = array_values(array_filter($mockNews, function ($news) use ($lang, $category_slug) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang
-            && ($news['category_slug'] ?? '') === $category_slug;
-}));
+$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content 
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE c.name = ? 
+        AND n.status = 'approved' 
+        AND t.language = ?
+        ORDER BY n.created_at DESC";
 
-usort($result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("ss", $category_name, $lang);
+$stmt->execute();
+$query_result = $stmt->get_result();
 
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+$result = [];
+
+while ($row = $query_result->fetch_assoc()) {
+    $n_id = (int)$row['id'];
+    $c_res = $conn->query("SELECT COUNT(*) as count FROM comments WHERE news_id = $n_id");
+    $row['comments_count'] = $c_res->fetch_assoc()['count'] ?? 0;
+    $result[] = $row;
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -107,111 +112,87 @@ $mockCommentsCount = [
                 </div>
             </nav>
         </div>
-
     </header>
-
     <main class="section category-layout">
         <div class="container category-container">
-
             <div class="category-main">
-
                 <div class="category-heading">
                     <h1>Шоу-бизнес</h1>
                     <p>Новости культуры, знаменитостей, музыки, кино и развлекательной индустрии.</p>
                 </div>
-
                 <?php if (!empty($result)): ?>
-
                     <?php $featured = $result[0]; ?>
-
                     <article class="featured-news-card">
                         <a href="/pages/article.php?id=<?= $featured['id'] ?>" class="featured-news-link">
-
                             <img
-                                    src="/uploads/news/<?= htmlspecialchars($featured['image']) ?>"
-                                    class="featured-news-image"
-                                    alt="news">
-
+                            src="<?= htmlspecialchars($featured['image']) ?>"
+                            class="featured-news-image"
+                            alt="news">
                             <div class="featured-news-content">
-
                                 <span class="featured-news-category">Шоу-бизнес</span>
-
                                 <h2 class="featured-news-title">
                                     <?= htmlspecialchars($featured['title']) ?>
                                 </h2>
-
                                 <p class="featured-news-excerpt">
                                     <?= mb_strimwidth(strip_tags($featured['content']), 0, 180, "...") ?>
                                 </p>
-
                                 <div class="featured-news-meta">
                                 <span>
                                     <i class="far fa-calendar-alt"></i>
                                     <?= date('d.m.Y', strtotime($featured['created_at'])) ?>
                                 </span>
-
-                                    <span>
+                                <span>
                                     <i class="far fa-eye"></i>
                                     <?= $featured['views'] ?>
                                 </span>
+                                <span>
+                                    <i class="far fa-eye"></i>
+                                    <?= $featured['comments_count'] ?>
+                                </span>
                                 </div>
-
                             </div>
                         </a>
                     </article>
-
                     <div class="category-news-list">
                         <?php foreach (array_slice($result, 1) as $row): ?>
-
                             <article class="category-news-item">
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="category-news-link">
-
                                     <img
-                                            src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
-                                            class="category-news-thumb"
-                                            alt="news">
-
+                                    src="<?= htmlspecialchars($row['image']) ?>"
+                                    class="category-news-thumb"
+                                    alt="news">
                                     <div class="category-news-info">
-
                                         <span class="category-news-label">Шоу-бизнес</span>
-
                                         <h3 class="category-news-title">
                                             <?= htmlspecialchars($row['title']) ?>
                                         </h3>
-
                                         <div class="category-news-meta">
                                         <span>
                                             <i class="far fa-calendar-alt"></i>
                                             <?= date('d.m.Y', strtotime($row['created_at'])) ?>
                                         </span>
-
-                                            <span>
+                                        <span>
                                             <i class="far fa-eye"></i>
                                             <?= $row['views'] ?>
                                         </span>
+                                        <span>
+                                            <i class="far fa-comment"></i>
+                                            <?= $row['comments_count'] ?>
+                                        </span>
                                         </div>
-
                                     </div>
-
                                 </a>
                             </article>
-
                         <?php endforeach; ?>
                     </div>
-
                 <?php endif; ?>
-
             </div>
-
             <aside class="category-sidebar">
-
                 <div class="sidebar-card">
                     <h3 class="sidebar-card-title">
                         Авторы в шоу-бизнесе
                     </h3>
-
                     <div class="sidebar-authors">
-
                         <div class="sidebar-author">
                             <img src="https://i.pravatar.cc/60?img=7" alt="">
                             <div>
@@ -219,7 +200,6 @@ $mockCommentsCount = [
                                 <span>22 статьи</span>
                             </div>
                         </div>
-
                         <div class="sidebar-author">
                             <img src="https://i.pravatar.cc/60?img=8" alt="">
                             <div>
@@ -227,7 +207,6 @@ $mockCommentsCount = [
                                 <span>16 статей</span>
                             </div>
                         </div>
-
                         <div class="sidebar-author">
                             <img src="https://i.pravatar.cc/60?img=9" alt="">
                             <div>
@@ -235,12 +214,9 @@ $mockCommentsCount = [
                                 <span>12 статей</span>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </aside>
-
         </div>
     </main>
 
