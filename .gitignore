@@ -1,2 +1,6 @@
 vendor/
 .env
+.DS_Store
+.idea/dataSources.xml
+.idea/laravel-idea.xml
+.idea/phpspec.xml

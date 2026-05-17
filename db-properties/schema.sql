@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: news_site_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: ${DB_NAME}
+MYSQL_USER: ${DB_USER}
+MYSQL_PASSWORD: ${DB_PASS}
+ports:
+- "3306:3306"
+volumes:
+- mysql_data:/var/lib/mysql
+- ./db-properties/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+- ./db-properties/dataF.sql:/docker-entrypoint-initdb.d/02_data.sql
+
+volumes:
+mysql_data:
+

@@ -1,34 +1,45 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = $_SESSION['lang'] ?? 'ru';
+$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$news_result = array_values(array_filter($mockNews, function ($news) use ($lang) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang;
-}));
+$sql = "SELECT n.id, n.image, n.views, n.created_at, n.category_id, t.title, t.content, c.name as category_name
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE n.status = 'approved'
+        AND t.language = ?
+        ORDER BY n.created_at DESC";
 
-usort($news_result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $lang);
+$stmt->execute();
+$result_obj = $stmt->get_result();
 
-$mockAuthors = [
-        ['name' => 'Алихан Сейсенов'],
-        ['name' => 'Мария Ким'],
-        ['name' => 'Рустем Ахметов'],
-        ['name' => 'Дана Омарова'],
-        ['name' => 'Ерасыл Нурлан'],
-];
+// Fetch all rows into a plain PHP array so we can reuse / slice it freely
+$news_result = [];
+while ($row = $result_obj->fetch_assoc()) {
+    $news_result[] = $row;
+}
 
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+// Build a comment-count lookup indexed by news id
+$commentsCount = [];
+foreach ($news_result as $row) {
+    $nid = (int)$row['id'];
+    $c_res = $conn->query("SELECT COUNT(*) as cnt FROM comments WHERE news_id = $nid");
+    $commentsCount[$nid] = (int)$c_res->fetch_assoc()['cnt'];
+}
+
+// Fetch top authors from DB
+$authors_result = $conn->query("SELECT name FROM users WHERE role != 'admin' ORDER BY rating DESC LIMIT 7");
+$dbAuthors = [];
+if ($authors_result && $authors_result->num_rows > 0) {
+    while ($a = $authors_result->fetch_assoc()) {
+        $dbAuthors[] = $a;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -37,26 +48,41 @@ $mockCommentsCount = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logotip news</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/global.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/components.css">
+    <link rel="stylesheet" href="/assets/css/pages/home.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
-<body>
+<body class="page-home">
 
     <header class="main-header">
-        <div class="container header-top">
-            <div class="header-left">
-                <button class="search-btn">🔍</button>
+        <div class="container header-top-row">
+            <div class="header-empty"></div>
+            <div class="logo-container">
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
-
-            <div class="header-center">
+            <div class="header-actions">
+                <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
                 <div class="lang-switcher">
-                    <a href="#kz" class="lang-item">KAZ</a>
-                    <a href="#ru" class="lang-item">RUS</a>
-                    <a href="#en" class="lang-item">ENG</a>
+                    <div class="lang-dropdown">
+                        <button class="lang-btn">
+                            <span class="lang-text"><?= $lang ?></span>
+                            <span class="lang-arrow">▼</span>
+                        </button>
+                        <div class="lang-list">
+                            <a href="#kz" class="lang-item">KZ</a>
+                            <a href="#ru" class="lang-item">RU</a>
+                            <a href="#en" class="lang-item">EN</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-
-            <div class="header-right">
                 <?php if (isset($_SESSION['user'])): ?>
                     <a href="/auth/logout.php" class="auth-btn-black" id="logout">Выйти</a>
                 <?php else: ?>
@@ -65,137 +91,277 @@ $mockCommentsCount = [
             </div>
         </div>
 
-        <div class="logo-container">
-            <h1 class="logo">Logotip news</h1>
+        <div class="container header-search-row">
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Поиск по сайту">
+            </div>
         </div>
 
-        <nav class="main-nav">
-            <div class="container nav-flex">
-                <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость 📢</a>
-                <ul class="nav-links">
-                    <li><a href="/pages/politics.php" id="politics">Политика</a></li>
-                    <li><a href="/pages/analytics.php" id="analytics">Аналитика</a></li>
-                    <li><a href="/pages/world.php" id="world">Мировые новости</a></li>
-                    <li><a href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a></li>
-                    <li><a href="/pages/sport.php" id="sports">Спорт</a></li>
-                    <li><a href="/pages/feed.php" id="my_lenta">Моя лента</a></li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-
-    <div class="container main-layout">
-        <aside class="sidebar-left">
-            <div class="sidebar-box">
-                <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
-                <ol class="author-list" id="best-authors-list">
-                    <?php if (!empty($mockAuthors)): ?>
-                        <?php foreach ($mockAuthors as $author):
-                            $nameParts = explode(' ', trim($author['name']));
-                            $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
-                            ?>
-                            <li class="author-item">
-                                <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
+        <div class="container padding_786">
+                <nav class="navbar navbar-toggleable-md navbar-light">
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" 
+                    data-target="#navbarSupportedContent" 
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="fa-solid fa-bars"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/pages/index.php" id="home">Главная</a>
                             </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p class="no-data" id="no-data">Список пуст</p>
-                    <?php endif; ?>
-                </ol>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/analytics.php" id="analytics">Аналитика</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/world.php" id="world">Мировые новости</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/sport.php" id="sports">Спорт</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/pages/feed.php" id="my_lenta">Моя лента</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
             </div>
-        </aside>
-
-        <main class="content-center">
-            <?php if (!empty($news_result)): ?>
-                <?php foreach ($news_result as $row):
-                    $n_id = $row['id'];
-                    // Получаем только кол-во комментариев
-                    $comm_count = $mockCommentsCount[$n_id] ?? 0;
-                ?>
-                    <article class="news-card">
-                        <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link-container">
-                            <?php if ($row['image']): ?>
-                                <img src="/uploads/news/<?= htmlspecialchars($row['image']) ?>"
-                                     class="news-main-img"
-                                     loading="lazy">
-                            <?php endif; ?>
-
-                            <div class="news-info">
-                                <span class="news-category-badge"><?= htmlspecialchars($row['category_name']) ?></span>
-                                <h2 class="news-title"><?= htmlspecialchars($row['title']) ?></h2>
-                                <p class="news-excerpt">
-                                    <?= mb_strimwidth(strip_tags($row['content']), 0, 180, "...") ?>
-                                </p>
+                
+            </header>
+                    
+            <section class="hero-section">
+                <div class="container">
+                    <div class="hero-carousel">
+                        <?php 
+                        $carousel_news = array_slice($news_result, 0, 3);
+                        foreach ($carousel_news as $index => $item): 
+                        ?>
+                        <a href="/pages/article.php?id=<?= $item['id'] ?>" class="hero-item <?= $index === 0 ? 'active' : '' ?>">
+                            <div class="hero-content">
+                                <span class="hero-category cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
+                                <p class="hero-excerpt"><?= mb_strimwidth(strip_tags($item['content']), 0, 200, "...") ?></p>
+                                <div class="hero-meta">
+                                    <span class="hero-date"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
+                                    <span class="hero-views">
+                                        <i class="far fa-eye"></i>
+                                        <?= $item['views'] ?>
+                                    </span>
+                                    <span class="hero-comments">
+                                        <i class="far fa-comment"></i>
+                                        <?= $commentsCount[(int)$item['id']] ?? 0 ?>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="hero-image-wrapper">
+                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="hero-img">
                             </div>
                         </a>
-
-                        <div class="news-footer">
-                            <div class="news-interactions">
-                                <a href="/pages/article.php?id=<?= $n_id ?>#comments" class="int-btn">
-                                    <svg class="icon-svg" viewBox="0 0 24 24">
-                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                    </svg>
-                                    <span class="int-count"><?= $comm_count ?></span>
-                                </a>
-
-                                <div class="int-btn views-only">
-                                    <svg class="icon-svg" viewBox="0 0 24 24">
-                                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
-                                    </svg>
-                                    <span class="int-count"><?= $row['views'] ?></span>
-                                </div>
-
-                                <span class="news-date-right"><?= date('d.m.Y', strtotime($row['created_at'])) ?></span>
-                            </div>
+                        <?php endforeach; ?>
+                        
+                        <div class="carousel-nav">
+                            <button class="carousel-prev" aria-label="Previous">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" 
+                                stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                            </button>
+                            <button class="carousel-next" aria-label="Next">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" 
+                                stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                            </button>
                         </div>
-                    </article>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="no-news">Новостей пока нет.</div>
-            <?php endif; ?>
-        </main>
 
-        <aside class="sidebar-right">
-            <div class="sidebar-box side-news">
-                <h3 class="sidebar-title" id="all-news">Все новости</h3>
-                <div class="side-news-list">
+                        <div class="carousel-dots">
+                            <?php foreach($carousel_news as $index => $item): ?>
+                                <span class="dot <?= $index === 0 ? 'active' : '' ?>"></span>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <div class="container main-layout">
+                <aside class="sidebar-left">
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
+                        <ol class="author-list" id="best-authors-list">
+                            <?php if (!empty($dbAuthors)): ?>
+                                <?php foreach ($dbAuthors as $author):
+                                    $nameParts = explode(' ', trim($author['name']));
+                                    $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
+                                    ?>
+                                    <li class="author-item">
+                                        <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="no-data" id="no-data">Список пуст</p>
+                            <?php endif; ?>
+                        </ol>
+                    </div>
+                </aside>
+
+                <main class="content-center">
                     <?php if (!empty($news_result)): ?>
-                        <?php foreach (array_slice($news_result, 0, 5) as $side_row): ?>
-                            <div class="side-news-item">
-                                <a href="/pages/article.php?id=<?= $side_row['id'] ?>" class="side-news-link">
-                                    <span class="side-news-date"><?= date('H:i', strtotime($side_row['created_at'])) ?></span>
-                                    <p class="side-news-title"><?= htmlspecialchars($side_row['title']) ?></p>
-                                </a>
+                        <?php
+                        $main_news_items = array_slice($news_result, 0, 3);
+                        foreach ($main_news_items as $item):
+                        ?>
+                        <!-- Main News Card -->
+                        <article class="featured-news-card">
+                            <a href="/pages/article.php?id=<?= $item['id'] ?>" class="featured-img-wrapper">
+                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="featured-img">
+                                <span class="category-badge-overlay cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
+                            </a>
+                            <div class="featured-content">
+                                <h2 class="featured-title">
+                                    <a href="/pages/article.php?id=<?= $item['id'] ?>"><?= htmlspecialchars($item['title']) ?></a>
+                                </h2>
+                                <p class="featured-excerpt">
+                                    <?= mb_strimwidth(strip_tags($item['content']), 0, 250, "...") ?>
+                                </p>
+                                <div class="featured-footer">
+                                    <div class="footer-left">
+                                        <span class="meta-item"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
+                                        <span class="meta-item">
+                                            <i class="far fa-eye"></i>
+                                            <?= $item['views'] ?>
+                                        </span>
+                                        <span class="meta-item">
+                                            <i class="far fa-comment"></i>
+                                            <?= $commentsCount[(int)$item['id']] ?? 0 ?>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
+                        </article>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="no-data">Новостей нет</p>
+                        <div class="no-news">Новостей пока нет.</div>
                     <?php endif; ?>
+                </main>
+
+                <aside class="sidebar-right">
+                    <div class="sidebar-box side-news">
+                        <h3 class="sidebar-title" id="all-news">Все новости</h3>
+                        <div class="side-news-list">
+                            <?php if (!empty($news_result)): ?>
+                                <?php foreach (array_slice($news_result, 0, 5) as $side_row): ?>
+                                    <div class="side-news-item">
+                                        <a href="/pages/article.php?id=<?= $side_row['id'] ?>" class="side-news-link">
+                                            <div class="side-news-content">
+                                                <p class="side-news-title"><?= htmlspecialchars($side_row['title']) ?></p>
+                                                <span class="side-news-date"><?= date('d.m.Y, H:i', strtotime($side_row['created_at'])) ?></span>
+                                            </div>
+                                            <?php if ($side_row['image']): ?>
+                                <img src="<?= htmlspecialchars($side_row['image']) ?>" class="side-news-thumb">
+                                            <?php endif; ?>
+                                        </a>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="no-data">Новостей нет</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Other News Section (Full Width) -->
+            <?php if (!empty($news_result)):
+                $other_news = array_slice($news_result, 3, 10);
+                if (!empty($other_news)): ?>
+            <div class="other-news-wrapper">
+                <div class="container">
+                    <section class="other-news-section-full">
+                        <div class="section-header">
+                            <h3 class="section-title other-news">Другие новости</h3>
+                            <div class="section-nav">
+                                <div class="section-dots" id="other-news-dots"></div>
+                                <button class="nav-btn prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                 <polyline points="15 18 9 12 15 6"/></svg></button>
+                                <button class="nav-btn next"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" 
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"/></svg></button>
+                            </div>
+                        </div>
+                        <div class="other-news-grid">
+                            <?php foreach ($other_news as $item): ?>
+                                <article class="small-news-card">
+                                    <a href="/pages/article.php?id=<?= $item['id'] ?>" class="small-img-wrapper">
+                                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="small-img">
+                                        <span class="category-badge-small cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
+                                    </a>
+                                    <div class="small-content">
+                                        <h4 class="small-title">
+                                            <a href="/pages/article.php?id=<?= $item['id'] ?>"><?= htmlspecialchars($item['title']) ?></a>
+                                        </h4>
+                                        <span class="small-date"><?= date('d.m.Y, H:i', strtotime($item['created_at'])) ?></span>
+                                    </div>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </section>
                 </div>
             </div>
-        </aside>
-    </div>
+            <?php endif; endif; ?>
 
     <footer class="main-footer">
-        <div class="container footer-content">
-            <div class="footer-legal">
-                <p id="certificate1">Свидетельство о постановке на учет №KZ05VFY00030397</p>
-                <p id="certificate2">выдано 22.12.2020</p>
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <div class="footer-logo">LOGOTIP NEWS</div>
+                <div class="footer-legal-info">
+                    <p id="certificate1">Свидетельство о постановке на учет №KZ05VFY00030397</p>
+                    <p id="certificate2">Выдано 22.12.2020</p>
+                </div>
+                <div class="footer-socials">
+                    <a href="#" class="social-link" aria-label="Instagram">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                        stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        <span>Instagram</span>
+                    </a>
+                    <a href="#" class="social-link" aria-label="TikTok">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" 
+                        stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+                        <span>TikTok</span>
+                    </a>
+                </div>
             </div>
-            <div class="footer-nav-groups">
-                <div class="footer-col"><a href="/pages/about.php" id="about_us">Про нас</a><a href="#" id="redaction">Редакция</a></div>
-                <div class="footer-col"><a href="#" id="vacancy">Вакансии</a><a href="/pages/contacts.php" id="contact">Контакты</a></div>
-                <div class="footer-col"><a href="#" id="advertisement">Реклама</a><a href="#" id="support">Поддержка</a></div>
-                <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
-                    <div class="footer-col">
-                        <a href="/admin/admin.php" style="color: #009688; font-weight: bold;">Admin</a>
-                    </div>
-                <?php endif; ?>
+            
+            <div class="footer-nav-section">
+                <h4 class="footer-title company">Компания</h4>
+                <nav class="footer-links">
+                    <a href="/pages/about.php" id="about_us">Про нас</a>
+                    <a href="#" id="redaction">Редакция</a>
+                    <a href="#" id="vacancy">Вакансии</a>
+                </nav>
             </div>
-            <div class="footer-socials">
-                <a href="#" class="social-icon">Instagram</a>
-                <a href="#" class="social-icon">TikTok</a>
+
+            <div class="footer-nav-section">
+                <h4 class="footer-title information">Информация</h4>
+                <nav class="footer-links">
+                    <a href="/pages/contacts.php" id="contact">Контакты</a>
+                    <a href="#" id="advertisement">Реклама</a>
+                    <a href="#" id="support">Поддержка</a>
+                </nav>
             </div>
+
+            <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
+            <div class="footer-nav-section">
+                <h4 class="footer-title admin-panel-title">Админ-панель</h4>
+                <nav class="footer-links">
+                    <a href="/admin/admin.php" id="admin-site-mgmt" style="color: var(--color-accent); font-weight: bold;">Управление сайтом</a>
+                    <a href="/admin/admin_actions.php" id="admin-news-mgmt">Управление новостями</a>
+                </nav>
+            </div>
+            <?php endif; ?>
         </div>
     </footer>
     <script src="/assets/js/lang.js"></script>

@@ -1,6 +1,6 @@
 /* Прячем страницу до загрузки перевода */
 body {
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.2s ease-in-out;
 }
 
@@ -12,7 +12,7 @@ body {
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: "Inter", sans-serif;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -97,7 +97,7 @@ body {
 
 .logo {
     font-size: 50px;
-    font-weight: 900;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -2px;
 }
@@ -200,7 +200,7 @@ body {
 .news-title {
     font-size: 32px;
     /* Крупный заголовок */
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.2;
     margin-bottom: 15px;
     color: #000;
@@ -466,7 +466,7 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0;
-    font-family: 'DM Sans', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .auth-wrapper {
@@ -485,7 +485,7 @@ body {
 
 .auth-logo a {
     font-size: 24px;
-    font-weight: 900;
+    font-weight: 700;
     color: #000;
     text-decoration: none;
     text-transform: uppercase;

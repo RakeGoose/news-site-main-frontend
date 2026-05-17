@@ -1,0 +1,266 @@
+.page-article {
+    background: #ffffff;
+}
+
+.article-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 60px;
+    margin-top: 40px;
+    margin-bottom: 80px;
+    align-items: start;
+}
+
+.article-main-content {
+    max-width: 860px;
+}
+
+.page-article .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    color: #009688;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.page-article .article-header {
+    margin-bottom: 32px;
+}
+
+.page-article .article-category {
+    display: block;
+    margin-bottom: 12px;
+    color: #009688;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.page-article .article-title {
+    margin: 0 0 20px;
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #111;
+}
+
+.page-article .article-meta {
+    display: flex;
+    gap: 24px;
+    color: #888;
+    font-size: 14px;
+}
+
+.page-article .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.page-article .article-img-wrapper {
+    margin: 32px 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.page-article .article-main-img {
+    width: 100%;
+    display: block;
+}
+
+.page-article .article-body {
+    font-size: 18px;
+    line-height: 1.7;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.page-article .article-inner-img {
+    width: 100%;
+    margin: 32px 0;
+    border-radius: 12px;
+}
+
+
+/* Comments Section */
+.comments-section {
+    margin-top: 60px;
+}
+
+.comments-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+}
+
+.comment-form {
+    background: #ffffff;
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: #fcfcfc;
+    resize: none;
+    font-size: 15px;
+}
+
+.comment-form-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.btn-submit {
+    background: #009688;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.login-to-comment {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 15px;
+    color: #444;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.login-to-comment a {
+    color: #009688;
+    font-weight: 700;
+}
+
+.no-comments-msg {
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* Comments List */
+.comments-list {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.comment-item {
+    display: flex;
+    gap: 20px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.comment-avatar {
+    font-size: 40px;
+    color: #ddd;
+    flex-shrink: 0;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.comment-author {
+    font-weight: 700;
+    font-size: 16px;
+    color: #111;
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #aaa;
+}
+
+.comment-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #444;
+}
+
+/* Sidebar */
+.article-sidebar {
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-box {
+    margin-bottom: 30px;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dot-accent {
+    width: 6px;
+    height: 6px;
+    background: #009688;
+    border-radius: 50%;
+}
+
+.view-all-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 24px;
+    color: #009688;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.view-all-link:hover {
+    color: #00796b;
+    text-decoration: underline;
+    transform: translateX(4px);
+}
+
+@media (max-width: 1100px) {
+    .article-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+
+    .article-sidebar {
+        position: static;
+        max-width: 860px;
+    }
+}
+
+@media (max-width: 640px) {
+    .page-article .article-title {
+        font-size: 32px;
+    }
+
+    .page-article .article-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

@@ -10,20 +10,25 @@ const langArr = {
         "kz": "Айдың үздік авторлары"
     },
     "suggest-news-btn": {
-        "ru": "Предложить новость 📢",
-        "en": "Suggest news 📢",
-        "kz": "Жаңалық ұсыну 📢"
+        "ru": "Предложить новость",
+        "en": "Suggest news",
+        "kz": "Жаңалық ұсыну"
     },
     "all-news": {
         "ru": "Все новости",
         "en": "All news",
         "kz": "Барлық жаңалықтар"
     },
+    "home": {
+        "ru": "Главная",
+        "en": "Home",
+        "kz": "Басты бет"
+    },
     "politics": { "ru": "Политика", "en": "Politics", "kz": "Саясат" },
     "my_lenta": { "ru": "Моя лента", "en": "My feed", "kz": "Менің лентам" },
     "analytics": { "ru": "Аналитика", "en": "Analytics", "kz": "Аналитика" },
     "world": { "ru": "Мировые новости", "en": "World news", "kz": "Әлем жаңалықтары" },
-    "showbiz": { "ru": "Шоу-бизнес", "en": "Showbiz", "kz": "Шоу-бизнес" },
+    "showbiz": { "ru": "Шоу-бизнес", "en": "Entertainment", "kz": "Шоу-бизнес" },
     "sports": { "ru": "Спорт", "en": "Sports", "kz": "Спорт" },
     "about_us": { "ru": "О нас", "en": "About us", "kz": "Біз туралы" },
     "contact": { "ru": "Контакты", "en": "Contact", "kz": "Байланыс" },
@@ -358,5 +363,214 @@ const langArr = {
     },
     "legal_status_label": {
         "ru": "Официальный статус:", "en": "Official status:", "kz": "Ресми мәртебесі:"
+    },
+    "search-input": {
+        "ru": "Поиск по сайту", "en": "Search", "kz": "Іздеу"
+    },
+    "other-news": {
+        "ru": "Другие новости", "en": "Other news", "kz": "Басқа жаңалықтар"
+    },
+    "similar-materials": {
+        "ru": "Похожие материалы", "en": "Similar materials", "kz": "Ұқсас материалдар"
+    },
+    "back-btn": {
+        "ru": "Назад", "en": "Back", "kz": "Артқа"
+    },
+    "comments-title": {
+        "ru": "Комментарии", "en": "Comments", "kz": "Пікірлер"
+    },
+    "login-to-comment": {
+        "ru": "Войдите, чтобы оставить комментарий", "en": "Log in to leave a comment", "kz": "Пікір қалдыру үшін жүйеге кіріңіз"
+    },
+    "submit-comment": {
+        "ru": "Отправить", "en": "Send", "kz": "Жіберу"
+    },
+    "no-comments": {
+        "ru": "Пока нет комментариев. Будьте первым!", "en": "No comments yet. Be the first!", "kz": "Әзірге пікірлер жоқ. Бірінші болыңыз!"
+    },
+    "comment-placeholder": {
+        "ru": "Оставьте свой комментарий...", "en": "Leave your comment...", "kz": "Пікіріңізді қалдырыңыз..."
+    },
+    "company": {
+        "ru": "Компания", "en": "Company", "kz": "Компания"
+    },
+    "information": {
+        "ru": "Информация", "en": "Information", "kz": "Ақпарат"
+    },
+    "cat-1": {
+        "ru": "Политика", "en": "Politics", "kz": "Саясат"
+    },
+    "cat-2": {
+        "ru": "Аналитика", "en": "Analytics", "kz": "Аналитика"
+    },
+    "cat-3": {
+        "ru": "Мировые новости", "en": "World news", "kz": "Әлем жаңалықтары"
+    },
+    "cat-4": {
+        "ru": "Шоу-бизнес", "en": "Entertainment", "kz": "Шоу-бизнес"
+    },
+    "cat-5": {
+        "ru": "Спорт", "en": "Sports", "kz": "Спорт"
+    },
+    "all-materials": {
+        "ru": "Все материалы", "en": "All materials", "kz": "Барлық материалдар"
+    },
+    "no-similar-news": {
+        "ru": "Похожих новостей нет", "en": "No similar news", "kz": "Ұқсас жаңалықтар жоқ"
+    },
+    "cat-desc-1": {
+        "ru": "Главные политические события, решения и заявления в Казахстане и мире.", "en": "The main political events, decisions and statements in Kazakhstan and the world.", "kz": "Қазақстандағы және әлемдегі басты саяси оқиғалар, шешімдер мен мәлімдемелер."
+    },
+    "cat-desc-2": {
+        "ru": "Глубокий анализ событий, тенденций и процессов в Казахстане и мире.", "en": "Deep analysis of events, trends, and processes in Kazakhstan and the world.", "kz": "Қазақстандағы және әлемдегі оқиғалар, тенденциялар мен процестерді терең талдау."
+    },
+    "cat-desc-3": {
+        "ru": "Главные международные события, политика, экономика и новости со всего мира.", "en": "Major international events, politics, economics, and news from around the world.", "kz": "Басты халықаралық оқиғалар, саясат, экономика және бүкіл әлемдегі жаңалықтар."
+    },
+    "cat-desc-4": {
+        "ru": "Новости культуры, знаменитостей, музыки, кино и развлекательной индустрии.", "en": "News from culture, celebrities, music, movies, and the entertainment industry.", "kz": "Мәдениет, танымал адамдар, музыка, кино және ойын-сауық индустриясының жаңалықтары."
+    },
+    "cat-desc-5": {
+        "ru": "Главные спортивные события, результаты матчей, трансферы и аналитика.", "en": "Major sporting events, match results, transfers, and analytics.", "kz": "Басты спорттық оқиғалар, матч нәтижелері, трансферлер және аналитика."
+    },
+    "sidebar-authors-title": {
+        "ru": "Авторы", "en": "Authors", "kz": "Авторлар"
+    },
+
+    // --- Форма создания новости ---
+    "submit-news-header h1": {
+        "ru": "Предложить новость",
+        "en": "Suggest news",
+        "kz": "Жаңалық ұсыну"
+    },
+    "submit-news-header p": {
+        "ru": "Поделитесь важной информацией с нашей редакцией.<br> Мы проверим её и опубликуем на сайте.",
+        "en": "Share important information with our editorial team.<br> We will check it and publish it on the website.",
+        "kz": "Маңызды ақпаратты редакциялық топпен бөлісіңіз.<br> Біз оны тексеріп, веб-сайтта жариялаймыз."
+    },
+    "sn1": {
+        "ru": "Выберите категорию*",
+        "en": "Select a category*",
+        "kz": "Санатты таңдаңыз*"
+    },
+    "sn2": {
+        "ru": "Язык новости*",
+        "en": "News language*",
+        "kz": "Жаңалықтар тілі*"
+    },
+    "sn3": {
+        "ru": "Заголовок (RU)*",
+        "en": "Title (RU)*",
+        "kz": "Атауы (RU)*"
+    },
+    "sn4": {
+        "ru": "Текст новости (RU)... *",
+        "en": "News text (RU)... *",
+        "kz": "Жаңалықтар мәтіні (RU)... *"
+    },
+    "sn5": {
+        "ru": "Загрузить обязательное фото*",
+        "en": "Upload a main photo*",
+        "kz": "Қажетті фотосуретті жүктеңіз*"
+    },
+    "sn6": {
+        "ru": "Загрузить дополнительное фото",
+        "en": "Upload an additional photo",
+        "kz": "Қосымша фотосурет жүктеп салу"
+    },
+    "submit-btn": {
+        "ru": "Отправить в редакцию",
+        "en": "Send to the editor",
+        "kz": "Редакторға жіберу"
+    },
+    "submit-agreement": {
+        "ru": "Нажимая на кнопку, вы соглашаетесь с правилами публикации материалов.",
+        "en": "By clicking the button, you agree to the rules for publishing materials.",
+        "kz": "Түймені басу арқылы сіз материалдарды жариялау ережелерімен келісесіз.",
+    },
+    "tab-btn-ru": {
+        "ru": "Русский (RU)",
+        "en": "Russian (RU)",
+        "kz": "Орыс (RU)",
+    },
+    "tab-btn-kz": {
+        "ru": "Казахский (KZ)",
+        "en": "Kazakh (KZ)",
+        "kz": "Қазақша (KZ)",
+    },
+    "tab-btn-en": {
+        "ru": "Английский (EN)",
+        "en": "English (EN)",
+        "kz": "Ағылшын (EN)",
+    },
+    "category-input": {
+        "ru": "Выберите категорию",
+        "en": "Select a category",
+        "kz": "Санатты таңдаңыз",
+    },
+    "title-input": {
+        "ru": "Введите заголовок",
+        "en": "Enter a title",
+        "kz": "Атауын енгізіңіз",
+    },
+    "text-input": {
+        "ru": "Введите текст новости",
+        "en": "Enter text of news",
+        "kz": "Жаңалық мәтінін енгізіңіз",
+    },
+    "main-photo-input": {
+        "ru": "Нажмите или перетащите файл сюда",
+        "en": "Click or drag the file here",
+        "kz": "Файлды осы жерге басыңыз немесе сүйреп апарыңыз",
+    },
+    "upload-placeholder small": {
+        "ru": "JPG, PNG до 3 MB",
+        "en": "JPG, PNG up to 3 MB",
+        "kz": "JPG, PNG 3 МБ дейін",
+    },
+    "addition-photo-input": {
+        "ru": "Нажмите или перетащите файл сюда",
+        "en": "Click or drag the file here",
+        "kz": "Файлды осы жерге басыңыз немесе сүйреп апарыңыз",
+    },
+    "title_my_lenta": {
+        "ru": "Моя лента | Logotip news",
+        "en": "My feed | Logotip news",
+        "kz": "Менің лентам | Logotip news",
+    },
+    "lenta_auth_title": {
+        "ru": "Ваша персональная лента",
+        "en": "Your personal feed",
+        "kz": "Сіздің жеке лентаңыз",
+    },
+    "lenta_auth_text": {
+        "ru": "Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.",
+        "en": "Log in to see news curated specifically for you.",
+        "kz": "Арнайы сізге арналған жаңалықтарды көру үшін жүйеге кіріңіз.",
+    },
+    "login_to_feed": {
+        "ru": "Войти",
+        "en": "Log in",
+        "kz": "Кіру",
+    },
+    "no_news_found": {
+        "ru": "В вашей ленте пока пусто.",
+        "en": "Your feed is currently empty.",
+        "kz": "Сіздің лентаңыз әзірге бос.",
+    },
+    "admin-panel-title": {
+        "ru": "Админ-панель",
+        "en": "Admin panel",
+        "kz": "Админ тақтасы",
+    },
+    "admin-site-mgmt": {
+        "ru": "Управление сайтом",
+        "en": "Site management",
+        "kz": "Сайтты басқару",
+    },
+    "admin-news-mgmt": {
+        "ru": "Управление новостями",
+        "en": "News management",
+        "kz": "Жаңалықтарды басқару",
     }
 };
