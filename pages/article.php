@@ -131,19 +131,19 @@ while ($s = $sim_result->fetch_assoc()) {
                         <li class="nav-item">
                             <a class="nav-link" href="/pages/index.php" id="home">Главная</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_id'] == 1 ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/politics.php" id="politics">Политика</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_id'] == 2 ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/analytics.php" id="analytics">Аналитика</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_id'] == 3 ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/world.php" id="world">Мировые новости</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_id'] == 4 ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/showbiz.php" id="showbiz">Шоу-бизнес</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item <?= $article['category_id'] == 5 ? 'active' : '' ?>">
                             <a class="nav-link" href="/pages/sport.php" id="sports">Спорт</a>
                         </li>
                         <li class="nav-item">
@@ -253,7 +253,7 @@ while ($s = $sim_result->fetch_assoc()) {
                                         <span class="side-news-date"><?= date('d.m.Y, H:i', strtotime($sim['created_at'])) ?></span>
                                     </div>
                                     <?php if ($sim['image']): ?>
-                                        <img src="/uploads/news/<?= htmlspecialchars($sim['image']) ?>" class="side-news-thumb">
+                                        <img src="<?= htmlspecialchars($sim['image']) ?>" class="side-news-thumb">
                                     <?php endif; ?>
                                 </a>
                             </div>
