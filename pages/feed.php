@@ -3,26 +3,38 @@ session_start();
 
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
-
 $lang = $_SESSION['lang'] ?? 'ru';
 
-$result = array_values(array_filter($mockNews, function ($news) use ($lang) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang;
-}));
+$sql = "SELECT n.id, n.image, n.views, n.created_at, n.category_id, t.title, t.content, c.name as category_name
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE n.status = 'approved'
+        AND t.language = ?
+        ORDER BY n.created_at DESC
+        LIMIT 20";
 
-usort($result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $lang);
+$stmt->execute();
+$result_obj = $stmt->get_result();
 
-$result = array_slice($result, 0, 20);
+$result = [];
+while ($row = $result_obj->fetch_assoc()) {
+    $result[] = $row;
+}
 
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+$commentsCount = [];
+foreach ($result as $row) {
+    $nid = (int)$row['id'];
+    $c_sql = "SELECT COUNT(*) as count FROM comments WHERE news_id = ?";
+    $c_stmt = $conn->prepare($c_sql);
+    $c_stmt->bind_param("i", $nid);
+    $c_stmt->execute();
+    $c_res = $c_stmt->get_result();
+    $c_row = $c_res->fetch_assoc();
+    $commentsCount[$nid] = (int)$c_row['count'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -112,7 +124,7 @@ $mockCommentsCount = [
 
     <main class="section">
         <div class="container">
-            <?php if (false): ?>
+            <?php if (!isset($_SESSION['user'])): ?>
                 <div class="feed-auth-box">
                     <h2 id="lenta_auth_title">Ваша персональная лента</h2>
                     <p id="lenta_auth_text">Авторизуйтесь, чтобы видеть новости, подобранные специально для вас.</p>
@@ -123,7 +135,7 @@ $mockCommentsCount = [
                     <?php if (!empty($result)): ?>
                         <?php foreach ($result as $row):
                             $n_id = $row['id'];
-                            $comm_count = $mockCommentsCount[$n_id] ?? 0;
+                            $comm_count = $commentsCount[$n_id] ?? 0;
                         ?>
                             <li class="news-item-card">
                                 <a href="/pages/article.php?id=<?= $row['id'] ?>" class="news-link">
