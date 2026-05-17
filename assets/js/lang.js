@@ -417,5 +417,78 @@ const langArr = {
     },
     "no-similar-news": {
         "ru": "Похожих новостей нет", "en": "No similar news", "kz": "Ұқсас жаңалықтар жоқ"
+    },
+
+    // --- Форма создания новости ---
+    "submit-news-header h1": {
+        "ru": "Предложить новость",
+        "en": "Suggest news",
+        "kz": "Жаңалық ұсыну"
+    },
+    "submit-news-header p": {
+        "ru": "Поделитесь важной информацией с нашей редакцией.<br> Мы проверим её и опубликуем на сайте.",
+        "en": "Share important information with our editorial team.<br> We will check it and publish it on the website.",
+        "kz": "Маңызды ақпаратты редакциялық топпен бөлісіңіз.<br> Біз оны тексеріп, веб-сайтта жариялаймыз."
+    },
+    "sn1": {
+        "ru": "Выберите категорию*",
+        "en": "Select a category*",
+        "kz": "Санатты таңдаңыз*"
+    },
+    "sn2": {
+        "ru": "Язык новости*",
+        "en": "News language*",
+        "kz": "Жаңалықтар тілі*"
+    },
+    "sn3": {
+        "ru": "Заголовок (RU)*",
+        "en": "Title (RU)*",
+        "kz": "Атауы (RU)*"
+    },
+    "sn4": {
+        "ru": "Текст новости (RU)... *",
+        "en": "News text (RU)... *",
+        "kz": "Жаңалықтар мәтіні (RU)... *"
+    },
+    "sn5": {
+        "ru": "Загрузить обязательное фото*",
+        "en": "Upload a main photo*",
+        "kz": "Қажетті фотосуретті жүктеңіз*"
+    },
+    "sn6": {
+        "ru": "Загрузить дополнительное фото",
+        "en": "Upload an additional photo",
+        "kz": "Қосымша фотосурет жүктеп салу"
+    },
+    "submit-btn": {
+        "ru": "Отправить в редакцию",
+        "en": "Send to the editor",
+        "kz": "Редакторға жіберу"
+    },
+    "submit-agreement": {
+        "ru": "Нажимая на кнопку, вы соглашаетесь с правилами публикации материалов.",
+        "en": "By clicking the button, you agree to the rules for publishing materials.",
+        "kz": "Түймені басу арқылы сіз материалдарды жариялау ережелерімен келісесіз.",
+    },
+    "tab-btn-ru": {
+        "ru": "Русский (RU)",
+        "en": "Russian (RU)",
+        "kz": "Орыс (RU)",
+    },
+    "tab-btn-kz": {
+        "ru": "Казахский (KZ)",
+        "en": "Kazakh (KZ)",
+        "kz": "Қазақша (KZ)",
+    },
+    "tab-btn-en": {
+        "ru": "Английский (EN)",
+        "en": "English (EN)",
+        "kz": "Ағылшын (EN)",
+    },
+    "": {
+        "ru": "",
+        "en": "",
+        "kz": "",
     }
+
 };

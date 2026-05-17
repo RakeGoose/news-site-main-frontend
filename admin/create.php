@@ -121,7 +121,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
                       enctype="multipart/form-data"
                       class="create-news-container">
                     <div class="input-group-news">
-                        <label class="news-label">
+                        <label class="news-label sn1">
                             Выберите категорию*
                         </label>
                         <select name="category_id"
@@ -134,11 +134,11 @@ $categories = $conn->query("SELECT id, name FROM categories");
                         </select>
                     </div>
                     <div class="input-group-news">
-                        <label class="news-label">Язык новости*</label>
+                        <label class="news-label sn2">Язык новости*</label>
                         <div class="lang-tabs">
-                            <div class="tab-btn active" onclick="showLang('ru')">Русский (RU)</div>
-                            <div class="tab-btn" onclick="showLang('kz')">Қазақша (KZ)</div>
-                            <div class="tab-btn" onclick="showLang('en')">English (EN)</div>
+                            <div class="tab-btn tab-btn-ru active" onclick="showLang('ru')">Русский (RU)</div>
+                            <div class="tab-btn tab-btn-kz" onclick="showLang('kz')">Қазақша (KZ)</div>
+                            <div class="tab-btn tab-btn-en" onclick="showLang('en')">English (EN)</div>
                         </div>
                     </div>
 
@@ -147,17 +147,17 @@ $categories = $conn->query("SELECT id, name FROM categories");
                         <div id="lang-<?= $lang ?>"
                              class="lang-section <?= $lang == 'ru' ? 'active' : '' ?>">
                             <div class="input-group-news">
-                                <label class="news-label">Заголовок (<?= strtoupper($lang) ?>)*</label>
+                                <label class="news-label sn3">Заголовок (<?= strtoupper($lang) ?>)*</label>
                                 <input type="text" name="title_<?= $lang ?>" class="news-input" placeholder="Введите заголовок" required>
                             </div>
                             <div class="input-group-news">
-                                <label class="news-label">Текст новости (<?= strtoupper($lang) ?>)... *</label>
+                                <label class="news-label sn4">Текст новости (<?= strtoupper($lang) ?>)... *</label>
                                 <textarea name="content_<?= $lang ?>" placeholder="Введите текст новости" required></textarea>
                             </div>
                         </div>
                     <?php endforeach; ?>
                     <div class="input-group-news">
-                        <label class="news-label">Загрузить обязательное фото*</label>
+                        <label class="news-label sn5">Загрузить обязательное фото*</label>
                         <div class="photo-area-wrapper">
                             <label for="newsPhoto" class="photo-upload-label">
                                 <input type="file" name="newsPhoto" id="newsPhoto" accept="image/*" hidden required>
@@ -170,7 +170,7 @@ $categories = $conn->query("SELECT id, name FROM categories");
                         </div>
                     </div>
                     <div class="input-group-news">
-                        <label class="news-label">Загрузить дополнительное фото</label>
+                        <label class="news-label sn6">Загрузить дополнительное фото</label>
                         <div class="photo-area-wrapper">
                             <label for="innerPhoto" class="photo-upload-label">
                                 <input type="file" name="innerPhoto" id="innerPhoto" accept="image/*" hidden>
