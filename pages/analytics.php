@@ -28,6 +28,15 @@ while ($row = $query_result->fetch_assoc()) {
     $row['comments_count'] = $c_res->fetch_assoc()['count'] ?? 0;
     $result[] = $row;
 }
+
+// Fetch top authors from DB
+$authors_result = $conn->query("SELECT name FROM users WHERE role != 'admin' ORDER BY rating DESC LIMIT 7");
+$dbAuthors = [];
+if ($authors_result && $authors_result->num_rows > 0) {
+    while ($a = $authors_result->fetch_assoc()) {
+        $dbAuthors[] = $a;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="<?= $lang ?>">
@@ -220,41 +229,23 @@ while ($row = $query_result->fetch_assoc()) {
 
             <!-- SIDEBAR -->
             <aside class="category-sidebar">
-
-                <div class="sidebar-card">
-                    <h3 class="sidebar-card-title sidebar-authors-title">
-                        Авторы
-                    </h3>
-
-                    <div class="sidebar-authors">
-
-                        <div class="sidebar-author">
-                            <img src="https://i.pravatar.cc/60?img=1">
-                            <div>
-                                <strong>Пупкин Запупкин</strong>
-                                <span>28 статей</span>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-author">
-                            <img src="https://i.pravatar.cc/60?img=2">
-                            <div>
-                                <strong>Гена Петрович</strong>
-                                <span>19 статей</span>
-                            </div>
-                        </div>
-
-                        <div class="sidebar-author">
-                            <img src="https://i.pravatar.cc/60?img=3">
-                            <div>
-                                <strong>Жанибек Бали</strong>
-                                <span>15 статей</span>
-                            </div>
-                        </div>
-
-                    </div>
+                <div class="sidebar-box">
+                    <h3 class="sidebar-title sidebar-authors-title" id="sidebar-authors-title">Авторы</h3>
+                    <ol class="author-list" id="best-authors-list">
+                        <?php if (!empty($dbAuthors)): ?>
+                            <?php foreach ($dbAuthors as $author):
+                                $nameParts = explode(' ', trim($author['name']));
+                                $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
+                                ?>
+                                <li class="author-item">
+                                    <span class="author-name"><?= htmlspecialchars($displayName) ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="no-data" id="no-data">Список пуст</p>
+                        <?php endif; ?>
+                    </ol>
                 </div>
-
             </aside>
 
         </div>
