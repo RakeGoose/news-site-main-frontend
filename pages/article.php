@@ -162,7 +162,7 @@ while ($s = $sim_result->fetch_assoc()) {
 
     <main class="container article-layout">
         <div class="article-main-content">
-            <a href="javascript:history.back()" class="back-link back-btn"><i class="fas fa-arrow-left"></i> Назад</a>
+            <a href="javascript:history.back()" class="back-link"><i class="fas fa-arrow-left"></i> <span class="back-btn">Назад</span></a>
 
             <header class="article-header">
                 <span class="article-category cat-<?= $article['category_id'] ?>"><?= htmlspecialchars($article['category_name']) ?></span>
@@ -268,10 +268,10 @@ while ($s = $sim_result->fetch_assoc()) {
                             </div>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <p class="no-data">Похожих новостей нет</p>
+                        <p class="no-similar-news">Похожих новостей нет</p>
                     <?php endif; ?>
                 </div>
-                <a href="/pages/index.php" class="view-all-link">Все материалы <i class="fas fa-arrow-right"></i></a>
+                <a href="/pages/index.php" class="view-all-link"><span class="all-materials">Все материалы</span> <i class="fas fa-arrow-right"></i></a>
             </div>
         </aside>
     </main>
