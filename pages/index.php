@@ -1,34 +1,24 @@
 <?php
 session_start();
-
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/init_lang.php';
-require_once __DIR__ . '/../config/mock_data.php';
 
-$lang = $_SESSION['lang'] ?? 'ru';
+$lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$news_result = array_values(array_filter($mockNews, function ($news) use ($lang) {
-    return ($news['status'] ?? '') === 'approved'
-            && ($news['language'] ?? 'ru') === $lang;
-}));
+$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content, c.name as category_name
+        FROM news n
+        JOIN categories c ON n.category_id = c.id
+        JOIN news_translations t ON n.id = t.news_id
+        WHERE n.status = 'approved'     
+        AND t.language = ? 
+        ORDER BY n.created_at DESC";
 
-usort($news_result, function ($a, $b) {
-    return strtotime($b['created_at']) <=> strtotime($a['created_at']);
-});
 
-$mockAuthors = [
-        ['name' => 'Алихан Сейсенов'],
-        ['name' => 'Мария Ким'],
-        ['name' => 'Рустем Ахметов'],
-        ['name' => 'Дана Омарова'],
-        ['name' => 'Ерасыл Нурлан'],
-];
 
-$mockCommentsCount = [
-        1 => 4,
-        2 => 2,
-        3 => 7,
-];
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $lang);
+$stmt->execute();
+$news_result = $stmt->get_result();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
