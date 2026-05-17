@@ -45,7 +45,7 @@
     padding: 8px 16px;
     border-radius: 6px;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -57,7 +57,7 @@
 .featured-title {
     font-size: 32px;
     line-height: 1.25;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 16px;
     letter-spacing: -0.02em;
 }
@@ -125,7 +125,7 @@
 
 .section-title {
     font-size: 24px;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: -0.01em;
 }
 
@@ -231,14 +231,14 @@
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 10px;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.03em;
 }
 
 .small-title {
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.35;
     margin-bottom: 10px;
     display: -webkit-box;

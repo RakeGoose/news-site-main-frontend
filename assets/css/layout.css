@@ -54,7 +54,7 @@
 .logo {
     margin: 0;
     font-size: clamp(32px, 4vw, 56px);
-    font-weight: 900;
+    font-weight: 700;
     line-height: 1;
     letter-spacing: -0.04em;
     text-transform: uppercase;
@@ -211,7 +211,7 @@
 
 .footer-logo {
     font-size: 32px;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: -0.04em;
     margin-bottom: 20px;
     color: #ffffff;
@@ -271,7 +271,7 @@
 
 .footer-title {
     font-size: 16px;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 32px;
     text-transform: uppercase;
     letter-spacing: 0.05em;

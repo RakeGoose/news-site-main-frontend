@@ -28,6 +28,9 @@ $translations = $conn->query("SELECT * FROM news_translations WHERE news_id = $i
 <head>
     <meta charset="UTF-8">
     <title>Просмотр новости #<?= $id ?></title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { font-family: sans-serif; background: #f4f7f6; padding: 20px; line-height: 1.6; }

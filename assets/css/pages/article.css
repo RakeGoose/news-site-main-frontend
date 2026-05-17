@@ -34,7 +34,7 @@
     margin-bottom: 12px;
     color: #009688;
     font-size: 13px;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
@@ -43,7 +43,7 @@
     margin: 0 0 20px;
     font-size: 42px;
     line-height: 1.2;
-    font-weight: 800;
+    font-weight: 700;
     color: #111;
 }
 
@@ -92,7 +92,7 @@
 
 .comments-title {
     font-size: 24px;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 24px;
 }
 
@@ -210,7 +210,7 @@
 
 .sidebar-title {
     font-size: 18px;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 24px;
     display: flex;
     align-items: center;

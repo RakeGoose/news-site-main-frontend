@@ -97,7 +97,7 @@ body {
 
 .logo {
     font-size: 50px;
-    font-weight: 900;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: -2px;
 }
@@ -200,7 +200,7 @@ body {
 .news-title {
     font-size: 32px;
     /* Крупный заголовок */
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.2;
     margin-bottom: 15px;
     color: #000;
@@ -485,7 +485,7 @@ body {
 
 .auth-logo a {
     font-size: 24px;
-    font-weight: 900;
+    font-weight: 700;
     color: #000;
     text-decoration: none;
     text-transform: uppercase;

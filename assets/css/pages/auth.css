@@ -30,7 +30,7 @@
 
 .auth-logo a {
     font-size: 42px;
-    font-weight: 900;
+    font-weight: 700;
     letter-spacing: -0.06em;
     text-transform: uppercase;
 }
@@ -39,7 +39,7 @@
     margin: 0 0 10px;
     text-align: center;
     font-size: 30px;
-    font-weight: 900;
+    font-weight: 700;
 }
 
 .auth-subtitle {
@@ -110,7 +110,7 @@
     background: transparent;
     color: var(--color-dark);
     font-size: 15px;
-    font-weight: 800;
+    font-weight: 600;
 }
 
 .auth-divider {
