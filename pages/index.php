@@ -5,20 +5,41 @@ require_once __DIR__ . '/../config/init_lang.php';
 
 $lang = isset($_SESSION['lang']) ? $_SESSION['lang'] : 'ru';
 
-$sql = "SELECT n.id, n.image, n.views, n.created_at, t.title, t.content, c.name as category_name
+$sql = "SELECT n.id, n.image, n.views, n.created_at, n.category_id, t.title, t.content, c.name as category_name
         FROM news n
         JOIN categories c ON n.category_id = c.id
         JOIN news_translations t ON n.id = t.news_id
-        WHERE n.status = 'approved'     
-        AND t.language = ? 
+        WHERE n.status = 'approved'
+        AND t.language = ?
         ORDER BY n.created_at DESC";
-
-
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $lang);
 $stmt->execute();
-$news_result = $stmt->get_result();
+$result_obj = $stmt->get_result();
+
+// Fetch all rows into a plain PHP array so we can reuse / slice it freely
+$news_result = [];
+while ($row = $result_obj->fetch_assoc()) {
+    $news_result[] = $row;
+}
+
+// Build a comment-count lookup indexed by news id
+$commentsCount = [];
+foreach ($news_result as $row) {
+    $nid = (int)$row['id'];
+    $c_res = $conn->query("SELECT COUNT(*) as cnt FROM comments WHERE news_id = $nid");
+    $commentsCount[$nid] = (int)$c_res->fetch_assoc()['cnt'];
+}
+
+// Fetch top authors from DB
+$authors_result = $conn->query("SELECT name FROM users WHERE role != 'admin' ORDER BY rating DESC LIMIT 7");
+$dbAuthors = [];
+if ($authors_result && $authors_result->num_rows > 0) {
+    while ($a = $authors_result->fetch_assoc()) {
+        $dbAuthors[] = $a;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -40,7 +61,9 @@ $news_result = $stmt->get_result();
         <div class="container header-top-row">
             <div class="header-empty"></div>
             <div class="logo-container">
-                <h1 class="logo">Logotip news</h1>
+                <a href="/pages/index.php" class="logo-link" style="text-decoration: none; color: inherit;">
+                    <h1 class="logo">Logotip news</h1>
+                </a>
             </div>
             <div class="header-actions">
                 <a href="/admin/create.php" class="btn-suggest" id="suggest-news-btn">Предложить новость</a>
@@ -67,13 +90,14 @@ $news_result = $stmt->get_result();
 
         <div class="container header-search-row">
             <div class="search-bar">
-                <input type="text" placeholder="Поиск по сайту">
+                <input type="text" class="search-input" placeholder="Поиск по сайту">
             </div>
         </div>
 
         <div class="container padding_786">
                 <nav class="navbar navbar-toggleable-md navbar-light">
-                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+                    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" 
+                    data-target="#navbarSupportedContent" 
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="fa-solid fa-bars"></span>
                     </button>
@@ -112,11 +136,11 @@ $news_result = $stmt->get_result();
                     <div class="hero-carousel">
                         <?php 
                         $carousel_news = array_slice($news_result, 0, 3);
-                        foreach($carousel_news as $index => $item): 
+                        foreach ($carousel_news as $index => $item): 
                         ?>
                         <a href="/pages/article.php?id=<?= $item['id'] ?>" class="hero-item <?= $index === 0 ? 'active' : '' ?>">
                             <div class="hero-content">
-                                <span class="hero-category"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <span class="hero-category cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                                 <h2 class="hero-title"><?= htmlspecialchars($item['title']) ?></h2>
                                 <p class="hero-excerpt"><?= mb_strimwidth(strip_tags($item['content']), 0, 200, "...") ?></p>
                                 <div class="hero-meta">
@@ -127,12 +151,12 @@ $news_result = $stmt->get_result();
                                     </span>
                                     <span class="hero-comments">
                                         <i class="far fa-comment"></i>
-                                        <?= $mockCommentsCount[$item['id']] ?? 0 ?>
+                                        <?= $commentsCount[(int)$item['id']] ?? 0 ?>
                                     </span>
                                 </div>
                             </div>
                             <div class="hero-image-wrapper">
-                                <img src="/uploads/news/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="hero-img">
+                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['title']) ?>" class="hero-img">
                             </div>
                         </a>
                         <?php endforeach; ?>
@@ -163,8 +187,8 @@ $news_result = $stmt->get_result();
                     <div class="sidebar-box">
                         <h3 class="sidebar-title" id="best-authors-title">Лучшие авторы месяца</h3>
                         <ol class="author-list" id="best-authors-list">
-                            <?php if (!empty($mockAuthors)): ?>
-                                <?php foreach ($mockAuthors as $author):
+                            <?php if (!empty($dbAuthors)): ?>
+                                <?php foreach ($dbAuthors as $author):
                                     $nameParts = explode(' ', trim($author['name']));
                                     $displayName = isset($nameParts[1]) ? $nameParts[0] . ' ' . $nameParts[1] : $nameParts[0];
                                     ?>
@@ -181,15 +205,15 @@ $news_result = $stmt->get_result();
 
                 <main class="content-center">
                     <?php if (!empty($news_result)): ?>
-                        <?php 
+                        <?php
                         $main_news_items = array_slice($news_result, 0, 3);
                         foreach ($main_news_items as $item):
                         ?>
                         <!-- Main News Card -->
                         <article class="featured-news-card">
                             <a href="/pages/article.php?id=<?= $item['id'] ?>" class="featured-img-wrapper">
-                                <img src="/uploads/news/<?= htmlspecialchars($item['image']) ?>" alt="" class="featured-img">
-                                <span class="category-badge-overlay"><?= htmlspecialchars($item['category_name']) ?></span>
+                                <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="featured-img">
+                                <span class="category-badge-overlay cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                             </a>
                             <div class="featured-content">
                                 <h2 class="featured-title">
@@ -207,7 +231,7 @@ $news_result = $stmt->get_result();
                                         </span>
                                         <span class="meta-item">
                                             <i class="far fa-comment"></i>
-                                            <?= $mockCommentsCount[$item['id']] ?? 0 ?>
+                                            <?= $commentsCount[(int)$item['id']] ?? 0 ?>
                                         </span>
                                     </div>
                                 </div>
@@ -232,7 +256,7 @@ $news_result = $stmt->get_result();
                                                 <span class="side-news-date"><?= date('d.m.Y, H:i', strtotime($side_row['created_at'])) ?></span>
                                             </div>
                                             <?php if ($side_row['image']): ?>
-                                                <img src="/uploads/news/<?= htmlspecialchars($side_row['image']) ?>" class="side-news-thumb">
+                                <img src="<?= htmlspecialchars($side_row['image']) ?>" class="side-news-thumb">
                                             <?php endif; ?>
                                         </a>
                                     </div>
@@ -246,14 +270,14 @@ $news_result = $stmt->get_result();
             </div>
 
             <!-- Other News Section (Full Width) -->
-            <?php if (!empty($news_result)): 
+            <?php if (!empty($news_result)):
                 $other_news = array_slice($news_result, 3, 10);
                 if (!empty($other_news)): ?>
             <div class="other-news-wrapper">
                 <div class="container">
                     <section class="other-news-section-full">
                         <div class="section-header">
-                            <h3 class="section-title">Другие новости</h3>
+                            <h3 class="section-title other-news">Другие новости</h3>
                             <div class="section-nav">
                                 <div class="section-dots" id="other-news-dots"></div>
                                 <button class="nav-btn prev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -268,8 +292,8 @@ $news_result = $stmt->get_result();
                             <?php foreach ($other_news as $item): ?>
                                 <article class="small-news-card">
                                     <a href="/pages/article.php?id=<?= $item['id'] ?>" class="small-img-wrapper">
-                                        <img src="/uploads/news/<?= htmlspecialchars($item['image']) ?>" alt="" class="small-img">
-                                        <span class="category-badge-small"><?= htmlspecialchars($item['category_name']) ?></span>
+                                        <img src="<?= htmlspecialchars($item['image']) ?>" alt="" class="small-img">
+                                        <span class="category-badge-small cat-<?= $item['category_id'] ?>"><?= htmlspecialchars($item['category_name']) ?></span>
                                     </a>
                                     <div class="small-content">
                                         <h4 class="small-title">
@@ -309,7 +333,7 @@ $news_result = $stmt->get_result();
             </div>
             
             <div class="footer-nav-section">
-                <h4 class="footer-title">Компания</h4>
+                <h4 class="footer-title company">Компания</h4>
                 <nav class="footer-links">
                     <a href="/pages/about.php" id="about_us">Про нас</a>
                     <a href="#" id="redaction">Редакция</a>
@@ -318,7 +342,7 @@ $news_result = $stmt->get_result();
             </div>
 
             <div class="footer-nav-section">
-                <h4 class="footer-title">Информация</h4>
+                <h4 class="footer-title information">Информация</h4>
                 <nav class="footer-links">
                     <a href="/pages/contacts.php" id="contact">Контакты</a>
                     <a href="#" id="advertisement">Реклама</a>

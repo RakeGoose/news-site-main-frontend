@@ -363,5 +363,59 @@ const langArr = {
     },
     "legal_status_label": {
         "ru": "Официальный статус:", "en": "Official status:", "kz": "Ресми мәртебесі:"
+    },
+    "search-input": {
+        "ru": "Поиск по сайту", "en": "Search", "kz": "Іздеу"
+    },
+    "other-news": {
+        "ru": "Другие новости", "en": "Other news", "kz": "Басқа жаңалықтар"
+    },
+    "similar-materials": {
+        "ru": "Похожие материалы", "en": "Similar materials", "kz": "Ұқсас материалдар"
+    },
+    "back-btn": {
+        "ru": "Назад", "en": "Back", "kz": "Артқа"
+    },
+    "comments-title": {
+        "ru": "Комментарии", "en": "Comments", "kz": "Пікірлер"
+    },
+    "login-to-comment": {
+        "ru": "Войдите, чтобы оставить комментарий", "en": "Log in to leave a comment", "kz": "Пікір қалдыру үшін жүйеге кіріңіз"
+    },
+    "submit-comment": {
+        "ru": "Отправить", "en": "Send", "kz": "Жіберу"
+    },
+    "no-comments": {
+        "ru": "Пока нет комментариев. Будьте первым!", "en": "No comments yet. Be the first!", "kz": "Әзірге пікірлер жоқ. Бірінші болыңыз!"
+    },
+    "comment-placeholder": {
+        "ru": "Оставьте свой комментарий...", "en": "Leave your comment...", "kz": "Пікіріңізді қалдырыңыз..."
+    },
+    "company": {
+        "ru": "Компания", "en": "Company", "kz": "Компания"
+    },
+    "information": {
+        "ru": "Информация", "en": "Information", "kz": "Ақпарат"
+    },
+    "cat-1": {
+        "ru": "Политика", "en": "Politics", "kz": "Саясат"
+    },
+    "cat-2": {
+        "ru": "Аналитика", "en": "Analytics", "kz": "Аналитика"
+    },
+    "cat-3": {
+        "ru": "Мировые новости", "en": "World news", "kz": "Әлем жаңалықтары"
+    },
+    "cat-4": {
+        "ru": "Шоу-бизнес", "en": "Showbiz", "kz": "Шоу-бизнес"
+    },
+    "cat-5": {
+        "ru": "Спорт", "en": "Sports", "kz": "Спорт"
+    },
+    "all-materials": {
+        "ru": "Все материалы", "en": "All materials", "kz": "Барлық материалдар"
+    },
+    "no-similar-news": {
+        "ru": "Похожих новостей нет", "en": "No similar news", "kz": "Ұқсас жаңалықтар жоқ"
     }
 };
