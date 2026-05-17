@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/init_lang.php';
 
 if (!isset($_SESSION['user'])) {
     header("Location: /auth/login.html");
