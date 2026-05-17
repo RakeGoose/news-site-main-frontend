@@ -558,6 +558,21 @@ const langArr = {
         "en": "Your feed is currently empty.",
         "kz": "Сіздің лентаңыз әзірге бос.",
     },
+    "admin-panel-title": {
+        "ru": "Админ-панель",
+        "en": "Admin panel",
+        "kz": "Әкімші тақтасы",
+    },
+    "admin-site-mgmt": {
+        "ru": "Управление сайтом",
+        "en": "Site management",
+        "kz": "Сайтты басқару",
+    },
+    "admin-news-mgmt": {
+        "ru": "Управление новостями",
+        "en": "News management",
+        "kz": "Жаңалықтарды басқару",
+    },
     "": {
         "ru": "",
         "en": "",

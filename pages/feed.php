@@ -215,10 +215,10 @@ foreach ($result as $row) {
 
             <?php if (isset($_SESSION['user']) && $_SESSION['user']['role'] === 'admin'): ?>
             <div class="footer-nav-section">
-                <h4 class="footer-title">Админ-панель</h4>
+                <h4 class="footer-title admin-panel-title">Админ-панель</h4>
                 <nav class="footer-links">
-                    <a href="/admin/admin.php" style="color: var(--color-accent); font-weight: bold;">Управление сайтом</a>
-                    <a href="/admin/admin_actions.php">Управление новостями</a>
+                    <a href="/admin/admin.php" id="admin-site-mgmt" style="color: var(--color-accent); font-weight: bold;">Управление сайтом</a>
+                    <a href="/admin/admin_actions.php" id="admin-news-mgmt">Управление новостями</a>
                 </nav>
             </div>
             <?php endif; ?>
